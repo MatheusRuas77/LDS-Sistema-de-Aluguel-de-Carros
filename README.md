@@ -44,3 +44,17 @@ Segue o padrão arquitetural **MVC (Model-View-Controller)**.
 - **Framework:** Micronaut  
 - **Arquitetura:** MVC  
 - **API:** RESTful  
+
+---
+## 👥 Participantes
+
+<div align="center">
+
+| Nome | GitHub |
+|------|--------|
+| **Matheus Ruas** | [![GitHub](https://img.shields.io/badge/@MatheusRuas77-181717?style=for-the-badge&logo=github)](https://github.com/MatheusRuas77) |
+| **Caio Resende** | [![GitHub](https://img.shields.io/badge/@CaioSResende-181717?style=for-the-badge&logo=github)](https://github.com/CaioSResende) |
+| **Lucas Ferreira** | [![GitHub](https://img.shields.io/badge/@iTsLJ-181717?style=for-the-badge&logo=github)](https://github.com/iTsLJ) |
+| **Gabriel Starling** | [![GitHub](https://img.shields.io/badge/@gabrielstarling1-181717?style=for-the-badge&logo=github)](https://github.com/gabrielstarling1) |
+
+</div>
