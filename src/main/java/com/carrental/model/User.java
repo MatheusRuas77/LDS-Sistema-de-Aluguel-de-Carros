@@ -61,6 +61,7 @@ public class User {
 
     @Valid
     @Size(max = 3, message = "A user can have at most 3 jobs")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Job> jobs = new ArrayList<>();
 }
