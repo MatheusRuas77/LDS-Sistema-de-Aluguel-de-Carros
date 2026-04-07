@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: io.micronaut:micronaut-aop:4.10.20" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.micronaut" artifactId="micronaut-aop" version="4.10.20" baseVersion="4.10.20" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut/micronaut-aop/4.10.20/1eb4f65f9e55e06425d304d0e898bab8b3efe321/micronaut-aop-4.10.20.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: io.micronaut:micronaut-http-server-netty:4.10.20" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.micronaut" artifactId="micronaut-http-server-netty" version="4.10.20" baseVersion="4.10.20" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut/micronaut-http-server-netty/4.10.20/77a6acb1f265bb1a1eb1e9b586909ed6af6df582/micronaut-http-server-netty-4.10.20.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

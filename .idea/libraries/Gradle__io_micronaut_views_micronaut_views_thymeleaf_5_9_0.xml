@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: io.micronaut.views:micronaut-views-thymeleaf:5.9.0" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.micronaut.views" artifactId="micronaut-views-thymeleaf" version="5.9.0" baseVersion="5.9.0" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.views/micronaut-views-thymeleaf/5.9.0/89b4c8527352e3e9caf7010aa011da357c2e7393/micronaut-views-thymeleaf-5.9.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

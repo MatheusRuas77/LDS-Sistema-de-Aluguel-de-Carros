@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: io.micronaut:micronaut-jackson-core:4.10.20" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.micronaut" artifactId="micronaut-jackson-core" version="4.10.20" baseVersion="4.10.20" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut/micronaut-jackson-core/4.10.20/669568c002291511c36219a690f3349150973e06/micronaut-jackson-core-4.10.20.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

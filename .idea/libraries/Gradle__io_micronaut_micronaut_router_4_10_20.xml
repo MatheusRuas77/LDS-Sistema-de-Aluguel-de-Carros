@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: io.micronaut:micronaut-router:4.10.20" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.micronaut" artifactId="micronaut-router" version="4.10.20" baseVersion="4.10.20" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut/micronaut-router/4.10.20/f4d1a4d9b7a4b00a94c30249b701657a2db28fa7/micronaut-router-4.10.20.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

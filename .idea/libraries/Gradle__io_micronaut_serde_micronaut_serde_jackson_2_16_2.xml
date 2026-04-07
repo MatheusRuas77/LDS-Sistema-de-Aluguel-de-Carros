@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: io.micronaut.serde:micronaut-serde-jackson:2.16.2" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.micronaut.serde" artifactId="micronaut-serde-jackson" version="2.16.2" baseVersion="2.16.2" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.serde/micronaut-serde-jackson/2.16.2/302ace067efaa3433e59af73671f884fbc0c50ac/micronaut-serde-jackson-2.16.2.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

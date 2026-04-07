@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="Gradle: io.micronaut.data:micronaut-data-tx-jdbc:4.14.3" type="java-imported" external-system-id="GRADLE">
+    <properties groupId="io.micronaut.data" artifactId="micronaut-data-tx-jdbc" version="4.14.3" baseVersion="4.14.3" />
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.micronaut.data/micronaut-data-tx-jdbc/4.14.3/6e976bd2a5edee2b4aefcf499ac3a974b500d10c/micronaut-data-tx-jdbc-4.14.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

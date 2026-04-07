@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/car-rental.iml" filepath="$PROJECT_DIR$/.idea/modules/car-rental.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/car-rental.main.iml" filepath="$PROJECT_DIR$/.idea/modules/car-rental.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/car-rental.test.iml" filepath="$PROJECT_DIR$/.idea/modules/car-rental.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/car-rental.testResources.iml" filepath="$PROJECT_DIR$/.idea/modules/car-rental.testResources.iml" />
+    </modules>
+  </component>
+</project>

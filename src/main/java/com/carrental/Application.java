@@ -1,7 +1,6 @@
 package com.carrental;
 
 import io.micronaut.runtime.Micronaut;
-
 public class Application {
 
     public static void main(String[] args) {
