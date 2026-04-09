@@ -23,7 +23,6 @@ Este projeto tem como objetivo desenvolver um **sistema web para gestão de alug
 Projeto acadêmico desenvolvido na disciplina de **Laboratório de Desenvolvimento de Software**, com foco em:
 - Arquitetura MVC  
 - Modelagem UML  
-- Desenvolvimento incremental por sprints  
 
 ---
 
