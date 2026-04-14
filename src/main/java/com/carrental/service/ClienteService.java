@@ -1,13 +1,14 @@
 package com.carrental.service;
 
 import com.carrental.model.Cliente;
-import com.carrental.model.Pedido;
 import com.carrental.repository.ClienteRepository;
 import io.micronaut.core.annotation.NonNull;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.Optional;
 
@@ -15,18 +16,23 @@ import java.util.Optional;
 public class ClienteService {
 
     private final ClienteRepository repository;
+    private final JwtService jwtService;
 
-    public ClienteService(ClienteRepository repository) {
+    @Inject
+    public ClienteService(ClienteRepository repository, JwtService jwtService) {
         this.repository = repository;
+        this.jwtService = jwtService;
     }
 
     @Transactional
     public Cliente create(@Valid @NotNull Cliente cliente) {
+        if (cliente.getSenha() != null && !cliente.getSenha().isBlank()) {
+            cliente.setSenha(BCrypt.hashpw(cliente.getSenha(), BCrypt.gensalt()));
+        }
 
-    if (cliente.getRendimentos() != null) {
-        cliente.getRendimentos().forEach(j -> j.setCliente(cliente));
-    }
-        //logica
+        if (cliente.getRendimentos() != null) {
+            cliente.getRendimentos().forEach(j -> j.setCliente(cliente));
+        }
         return repository.save(cliente);
     }
 
@@ -45,11 +51,14 @@ public class ClienteService {
 
         existente.setNome(updated.getNome());
         existente.setLogin(updated.getLogin());
-        existente.setSenha(updated.getSenha());
         existente.setEndereco(updated.getEndereco());
         existente.setCpf(updated.getCpf());
         existente.setRg(updated.getRg());
         existente.setProfissao(updated.getProfissao());
+
+        if (updated.getSenha() != null && !updated.getSenha().isBlank()) {
+            existente.setSenha(BCrypt.hashpw(updated.getSenha(), BCrypt.gensalt()));
+        }
 
         return repository.update(existente);
     }
@@ -60,5 +69,21 @@ public class ClienteService {
             throw new IllegalArgumentException("Cliente não encontrado com id: " + id);
         }
         repository.deleteById(id);
+    }
+
+    public String autenticar(String login, String senha) {
+        Cliente cliente = repository.findByLogin(login)
+                .orElseThrow(() -> new IllegalArgumentException("Cliente não encontrado"));
+
+        if (!BCrypt.checkpw(senha, cliente.getSenha())) {
+            throw new IllegalArgumentException("Senha inválida");
+        }
+
+        return jwtService.gerarToken(
+                cliente.getId(),
+                cliente.getLogin(),
+                "CLIENTE",
+                null
+        );
     }
 }

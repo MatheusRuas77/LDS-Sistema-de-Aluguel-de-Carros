@@ -13,7 +13,6 @@ micronaut:
       swagger:
         paths: classpath:META-INF/swagger
         mapping: /swagger/**
-
       swagger-ui:
         paths: classpath:META-INF/swagger/views/swagger-ui
         mapping: /swagger-ui/**
@@ -37,3 +36,6 @@ jpa:
           auto: update
         show_sql: true
         format_sql: true
+
+jwt:
+  secret-key: "0RkKUGai4SVegSkcYgwRJCL1fDDHHbdzdgPlLSAJBOBPPHTfoBENW2OWLX0BDX3TJMy3E9ws5Oy8NPcJJbPHyu"

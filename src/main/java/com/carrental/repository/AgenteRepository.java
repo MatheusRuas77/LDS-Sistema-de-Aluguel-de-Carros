@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface AgenteRepository extends CrudRepository<Agente, Long> {
     List<Agente> findByRole(AgenteRoleEnum role);
+    Agente findByLogin(String login);
 }

@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+org.eclipse.jdt.apt.aptEnabled=true
+org.eclipse.jdt.apt.genSrcDir=bin/generated-sources/annotations
+org.eclipse.jdt.apt.genTestSrcDir=bin/generated-test-sources/annotations
+org.eclipse.jdt.apt.processorOptions/micronaut.openapi.enabled=true
+org.eclipse.jdt.apt.processorOptions/micronaut.openapi.views.spec=swagger-ui.enabled\=true
+org.eclipse.jdt.apt.processorOptions/micronaut.processing.annotations=com.carrental.*
+org.eclipse.jdt.apt.processorOptions/micronaut.processing.group=com.carrental
+org.eclipse.jdt.apt.processorOptions/micronaut.processing.incremental=true
+org.eclipse.jdt.apt.processorOptions/micronaut.processing.module=car-rental
