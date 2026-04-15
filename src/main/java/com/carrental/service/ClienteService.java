@@ -2,6 +2,7 @@ package com.carrental.service;
 
 import com.carrental.model.Cliente;
 import com.carrental.repository.ClienteRepository;
+import com.carrental.security.JwtUtil;
 import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
@@ -16,12 +17,12 @@ import java.util.Optional;
 public class ClienteService {
 
     private final ClienteRepository repository;
-    private final JwtService jwtService;
+    private final JwtUtil jwtUtil;
 
     @Inject
-    public ClienteService(ClienteRepository repository, JwtService jwtService) {
+    public ClienteService(ClienteRepository repository, JwtUtil jwtUtil) {
         this.repository = repository;
-        this.jwtService = jwtService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Transactional
@@ -79,7 +80,7 @@ public class ClienteService {
             throw new IllegalArgumentException("Senha inválida");
         }
 
-        return jwtService.gerarToken(
+        return jwtUtil.gerarToken(
                 cliente.getId(),
                 cliente.getLogin(),
                 "CLIENTE",
