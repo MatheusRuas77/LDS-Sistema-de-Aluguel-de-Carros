@@ -1,59 +1,136 @@
-# 🚗 Sistema de Aluguel de Carros 👨‍💻
+# 🚗 Sistema de Aluguel de Carros
 
-> [!NOTE]
-> Sistema web para gerenciamento de pedidos de aluguel de automóveis, permitindo cadastro, análise financeira e formalização de contratos de forma digital.
+API e paginas web para gerenciamento de aluguel de automoveis, com cadastro de clientes/agentes, autenticacao JWT e fluxo de pedidos.
 
----
+## 📌 Visao geral
 
-## 🚧 Status do Projeto
+Este projeto foi desenvolvido para a disciplina de Laboratorio de Desenvolvimento de Software, seguindo o padrao MVC com Micronaut.
 
-![Versão](https://img.shields.io/badge/Versão-v1.0.0-blue?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge)
-![Java](https://img.shields.io/badge/Java-17+-orange?style=for-the-badge)
-![Micronaut](https://img.shields.io/badge/Micronaut-Framework-purple?style=for-the-badge)
+Funcionalidades principais:
+- Cadastro e gerenciamento de `Cliente`, `Agente`, `Automovel` e `Pedido`
+- Login de cliente e agente com JWT
+- Pagina web de login em `/auth/login`
+- Dashboards HTML em `/pages/dashboard-cliente` e `/pages/dashboard-agente`
+- Documentacao da API com Swagger/OpenAPI
 
----
+## 🛠️ Stack
 
-## 📝 Sobre o Projeto
+- Java 21
+- Micronaut 4.6.2
+- Gradle (Kotlin DSL)
+- PostgreSQL
+- JPA/Hibernate
+- Micronaut Security JWT
+- Micronaut Views + Thymeleaf
 
-Este projeto tem como objetivo desenvolver um **sistema web para gestão de aluguel de automóveis**, permitindo que clientes e agentes (empresas e bancos) interajam de forma eficiente através da internet.
+## ✅ Requisitos
 
+- JDK 21
+- PostgreSQL rodando localmente
+- Banco criado: `carrental`
 
-### 🌐 Contexto
-Projeto acadêmico desenvolvido na disciplina de **Laboratório de Desenvolvimento de Software**, com foco em:
-- Arquitetura MVC  
-- Modelagem UML  
+## ⚙️ Configuracao
 
----
+As configuracoes principais estao em `src/main/resources/application.yml`.
 
-## 🖥️ Arquitetura
+Datasource atual:
+- URL: `jdbc:postgresql://localhost:5432/carrental`
+- Usuario: `lucas`
+- Senha: `root`
 
-O sistema será dividido em dois subsistemas principais:
+> 💡 Recomendacao: para uso fora do ambiente local, mover credenciais e segredo JWT para variaveis de ambiente.
 
-- 📦 **Gestão de Pedidos e Contratos**  
-- 🌐 **Renderização e Construção de Páginas Web**
+## ▶️ Como executar
 
-Segue o padrão arquitetural **MVC (Model-View-Controller)**.
+1. Clone o repositorio.
+2. Garanta que o PostgreSQL esteja ativo e o banco `carrental` exista.
+3. Execute a aplicacao:
 
----
+```bash
+./gradlew run
+```
 
-## 🖥️ Back-end
+## 🔗 URLs importantes
 
-- **Linguagem:** Java 17+  
-- **Framework:** Micronaut  
-- **Arquitetura:** MVC  
-- **API:** RESTful  
+- API base: `http://localhost:8080`
+- Swagger UI: `http://localhost:8080/swagger-ui`
+- Login web: `http://localhost:8080/auth/login`
 
----
+## 🔐 Autenticacao
+
+Endpoints de login:
+- `POST /auth/login/cliente`
+- `POST /auth/login/agente`
+
+Body esperado:
+
+```json
+{
+  "login": "usuario",
+  "senha": "123456"
+}
+```
+
+Resposta de sucesso:
+
+```json
+{
+  "token": "<jwt>",
+  "tipoUsuario": "CLIENTE"
+}
+```
+
+ou
+
+```json
+{
+  "token": "<jwt>",
+  "tipoUsuario": "AGENTE"
+}
+```
+
+Para acessar rotas protegidas, enviar o header:
+
+```text
+Authorization: Bearer <jwt>
+```
+
+## 📡 Endpoints principais
+
+- `GET/POST/PUT/DELETE /clientes`
+- `GET/POST/PUT/DELETE /agentes`
+- `GET/POST/PUT/DELETE /automovel`
+- `POST /pedido?clienteId=...`
+- `GET /pedido?clienteId=...`
+- `PUT /pedido/{id}/status?agenteId=...`
+
+## 🖥️ Paginas web
+
+- `GET /auth/login` -> tela de login
+- `GET /pages/dashboard-cliente` -> dashboard cliente
+- `GET /pages/dashboard-agente` -> dashboard agente
+
+## 🧱 Estrutura resumida
+
+- `src/main/java/com/carrental/controller` -> controladores HTTP
+- `src/main/java/com/carrental/service` -> regras de negocio
+- `src/main/java/com/carrental/repository` -> acesso a dados
+- `src/main/java/com/carrental/model` -> entidades JPA
+- `src/main/resources/views` -> paginas HTML (Thymeleaf)
+- `src/main/resources/application.yml` -> configuracao da aplicacao
+
+## 🚀 Melhorias recomendadas
+
+- Padronizar tratamento global de excecoes para todas as rotas
+- Aumentar cobertura de testes automatizados
+- Ajustar politicas de acesso no `intercept-url-map` conforme os perfis
+- Externalizar secrets e credenciais por ambiente
+
 ## 👥 Participantes
-
-<div align="center">
 
 | Nome | GitHub |
 |------|--------|
-| **Matheus Ruas** | [![GitHub](https://img.shields.io/badge/@MatheusRuas77-181717?style=for-the-badge&logo=github)](https://github.com/MatheusRuas77) |
-| **Caio Resende** | [![GitHub](https://img.shields.io/badge/@CaioSResende-181717?style=for-the-badge&logo=github)](https://github.com/CaioSResende) |
-| **Lucas Ferreira** | [![GitHub](https://img.shields.io/badge/@iTsLJ-181717?style=for-the-badge&logo=github)](https://github.com/iTsLJ) |
-| **Gabriel Starling** | [![GitHub](https://img.shields.io/badge/@gabrielstarling1-181717?style=for-the-badge&logo=github)](https://github.com/gabrielstarling1) |
-
-</div>
+| Matheus Ruas | [@MatheusRuas77](https://github.com/MatheusRuas77) |
+| Caio Resende | [@CaioSResende](https://github.com/CaioSResende) |
+| Lucas Ferreira | [@iTsLJ](https://github.com/iTsLJ) |
+| Gabriel Starling | [@gabrielstarling1](https://github.com/gabrielstarling1) |
