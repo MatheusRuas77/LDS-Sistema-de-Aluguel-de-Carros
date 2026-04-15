@@ -4,9 +4,11 @@ import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.views.View;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.util.Collections;
 import java.util.Map;
-
+@Tag(name= "Pages")
 @Controller("/pages")
 public class PageController {
 

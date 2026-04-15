@@ -9,11 +9,12 @@ import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
 
 import java.util.List;
 import java.util.Map;
-
+@Tag(name = "Pedido")
 @Controller("/pedido")
 public class PedidoController {
 
