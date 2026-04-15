@@ -1,5 +1,6 @@
 package com.carrental.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
@@ -30,6 +31,7 @@ public abstract class Usuario {
     @Column(nullable = false, unique = true, length = 100)
     private String login;
 
+    @JsonIgnore
     @NotBlank
     @Column(nullable = false, length = 60)
     private String senha;

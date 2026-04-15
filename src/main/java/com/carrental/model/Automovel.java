@@ -4,6 +4,7 @@ import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 @Entity
@@ -39,6 +40,7 @@ public class Automovel {
     @Column(nullable = false, length = 100)
     private String marca;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "proprietario_id")
     private Usuario proprietario;

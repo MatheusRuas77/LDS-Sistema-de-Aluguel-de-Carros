@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "pedidos")
@@ -31,12 +32,12 @@ public class Pedido {
     @Column(nullable = false, length = 20)
     private StatusPedidoEnum status = StatusPedidoEnum.PENDENTE;
 
-    @ManyToOne
-    @JoinColumn(name = "cliente_id", nullable = false)
     @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "pedido_automoveis",
         joinColumns = @JoinColumn(name = "pedido_id"),
@@ -53,10 +54,22 @@ public class Pedido {
     @Column(name = "valor_total", precision = 15, scale = 2)
     private BigDecimal valorTotal;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "agente_responsavel_id")
     private Agente agenteResponsavel;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "pedido", cascade = CascadeType.ALL)
     private Contrato contrato;
+
+    @JsonProperty("clienteNome")
+    public String getClienteNome() {
+        return cliente != null ? cliente.getNome() : null;
+    }
+
+    @JsonProperty("clienteId")
+    public Long getClienteId() {
+        return cliente != null ? cliente.getId() : null;
+    }
 }

@@ -5,6 +5,7 @@ import com.carrental.enums.StatusPedidoEnum;
 import com.carrental.model.Pedido;
 import com.carrental.service.PedidoService;
 
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
 
@@ -42,16 +43,19 @@ public class PedidoController {
     }
 
     @Get
-    public HttpResponse<List<Pedido>> findByCliente(
-            @QueryValue Long clienteId) {
+    public HttpResponse<List<Pedido>> findPedidos(
+            @Nullable @QueryValue Long clienteId) {
 
-        return HttpResponse.ok(pedidoService.findByCliente(clienteId));
+        if (clienteId != null) {
+            return HttpResponse.ok(pedidoService.findByCliente(clienteId));
+        }
+        return HttpResponse.ok(pedidoService.findAll());
     }
 
     @Put("/{id}/status")
     public HttpResponse<Pedido> atualizarStatus(
             @PathVariable Long id,
-            @QueryValue Long agenteId,
+            @Nullable @QueryValue Long agenteId,
             @Body Map<String, String> body) {
 
         StatusPedidoEnum novoStatus = StatusPedidoEnum.valueOf(body.get("status"));

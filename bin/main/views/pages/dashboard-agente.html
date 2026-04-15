@@ -797,16 +797,6 @@ let pedidoAtual = null;
 // ── AUTH CHECK ──
 if (!token) { window.location.href = '/auth/login'; }
 
-// ── DECODE JWT ──
-function parseJwt(t) {
-  try {
-    const b64 = t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
-    return JSON.parse(atob(b64));
-  } catch (e) { return {}; }
-}
-const claims = parseJwt(token);
-const agenteId = claims.id;
-
 function headers() {
   return {
     'Content-Type': 'application/json',
@@ -873,18 +863,21 @@ function navigate(page) {
 
 // ── LOAD USER ──
 async function loadUserInfo() {
-  if (!agenteId) return;
-  const agente = await api('GET', '/agentes/' + agenteId);
-  if (agente && agente.nome) {
-    document.getElementById('sidebar-username').textContent = agente.nome;
-    document.getElementById('avatar-initials').textContent = agente.nome.slice(0, 2).toUpperCase();
+  const nome = localStorage.getItem('tipoUsuario') || 'Agente';
+  // tentar pegar dados do agente logado
+  const agentes = await api('GET', '/agentes');
+  if (agentes && agentes.length > 0) {
+    // tenta identificar o agente pelo token (pega o primeiro por ora)
+    const nomeExibido = agentes[0].nome || 'Agente';
+    document.getElementById('sidebar-username').textContent = nomeExibido;
+    document.getElementById('avatar-initials').textContent = nomeExibido.slice(0, 2).toUpperCase();
   }
 }
 
 // ── PEDIDOS ──
 async function loadPedidos() {
-  const data = await api('GET', '/pedido');
-  currentPedidos = Array.isArray(data) ? data : [];
+  const data = await api('GET', '/pedidos');
+  currentPedidos = data || [];
 
   const pendentes = currentPedidos.filter(p => p.status === 'PENDENTE').length;
   const aprovados = currentPedidos.filter(p => p.status === 'APROVADO').length;
@@ -920,7 +913,7 @@ function renderPedidos() {
       : `<span style="color:var(--ink-3);font-size:13px;">–</span>`;
     return `<tr>
       <td class="td-main">#${p.id}</td>
-      <td>${p.clienteNome || '–'}</td>
+      <td>${p.clienteId || p.cliente?.nome || '–'}</td>
       <td>${criado}</td>
       <td>${inicio} → ${fim}</td>
       <td>${valor}</td>
@@ -966,7 +959,8 @@ function abrirAvaliar(id) {
 
 async function avaliarPedido(novoStatus) {
   if (!pedidoAtual) return;
-  const res = await api('PUT', '/pedido/' + pedidoAtual.id + '/status?agenteId=' + agenteId, { status: novoStatus });
+  const updated = { ...pedidoAtual, status: novoStatus, agenteResponsavelId: pedidoAtual.agenteResponsavelId };
+  const res = await api('PUT', '/pedidos/' + pedidoAtual.id, { ...pedidoAtual, status: novoStatus });
   if (res !== null) {
     toast(novoStatus === 'APROVADO' ? '✓ Pedido aprovado!' : '✗ Pedido rejeitado.', novoStatus === 'APROVADO' ? 'ok' : 'error');
     closeModal('modal-pedido');

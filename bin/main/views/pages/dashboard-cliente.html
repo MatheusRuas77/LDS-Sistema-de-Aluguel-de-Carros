@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Rental — Painel do Cliente</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0d0f14;
+  --ink-2: #3a3d47;
+  --ink-3: #8891a4;
+  --surface: #f5f4f0;
+  --surface-2: #eceae4;
+  --surface-3: #e0ddd5;
+  --white: #ffffff;
+  --accent: #1a3cff;
+  --accent-soft: #e8ecff;
+  --accent-2: #ff4d1c;
+  --ok: #0d7a55;
+  --ok-soft: #d4f5e9;
+  --danger: #c0180c;
+  --danger-soft: #fee2e2;
+  --pending: #5b21b6;
+  --pending-soft: #ede9fe;
+  --sidebar-w: 240px;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 100;
+}
+
+.sidebar-logo {
+  padding: 28px 24px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar-logo .brand {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  padding: 16px 12px 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: rgba(255,255,255,0.55);
+  font-size: 14px;
+  font-weight: 400;
+  transition: all 0.15s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover { background: rgba(255,255,255,0.07); color: rgba(255,255,255,0.9); }
+.nav-item.active { background: rgba(26,60,255,0.25); color: #fff; font-weight: 500; }
+.nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+.sidebar-footer {
+  padding: 16px 12px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.user-info { flex: 1; min-width: 0; }
+.user-name { font-size: 13px; font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,0.35);
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+.logout-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+/* ── MAIN ── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--surface-3);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.topbar-actions { display: flex; gap: 10px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+}
+
+.btn-primary { background: var(--accent); color: #fff; }
+.btn-primary:hover { background: #1230dd; }
+.btn-ghost { background: transparent; color: var(--ink-2); border: 1px solid var(--surface-3); }
+.btn-ghost:hover { background: var(--surface-2); }
+.btn-danger { background: var(--danger-soft); color: var(--danger); }
+.btn-danger:hover { background: #fecaca; }
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+
+.content { padding: 32px; flex: 1; }
+
+/* ── STATS ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  border: 1px solid var(--surface-3);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.stat-card.blue::before { background: var(--accent); }
+.stat-card.green::before { background: #10b981; }
+.stat-card.orange::before { background: #f59e0b; }
+.stat-card.red::before { background: var(--accent-2); }
+
+.stat-label { font-size: 12px; color: var(--ink-3); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; }
+.stat-value { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: -0.03em; color: var(--ink); }
+.stat-sub { font-size: 12px; color: var(--ink-3); margin-top: 6px; }
+
+/* ── SECTIONS ── */
+.section { display: none; }
+.section.active { display: block; }
+
+.section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.section-title { font-family: 'Syne', sans-serif; font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
+
+/* ── TABLE ── */
+.table-wrap { background: var(--white); border-radius: var(--radius); border: 1px solid var(--surface-3); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; }
+thead th { background: var(--surface); padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-3); border-bottom: 1px solid var(--surface-3); }
+tbody tr { border-bottom: 1px solid var(--surface-2); transition: background 0.1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--surface); }
+tbody td { padding: 13px 16px; font-size: 14px; color: var(--ink-2); }
+.td-main { color: var(--ink); font-weight: 500; }
+
+/* ── BADGES ── */
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; }
+.badge-pendente { background: var(--pending-soft); color: var(--pending); }
+.badge-aprovado { background: var(--ok-soft); color: var(--ok); }
+.badge-rejeitado { background: var(--danger-soft); color: var(--danger); }
+.badge-cancelado { background: var(--surface-2); color: var(--ink-3); }
+
+/* ── PERFIL ── */
+.profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; }
+.profile-row { padding: 14px 0; border-bottom: 1px solid var(--surface-2); }
+.profile-row:last-child { border-bottom: none; }
+.profile-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-3); margin-bottom: 4px; }
+.profile-value { font-size: 15px; color: var(--ink); font-weight: 500; }
+
+.form-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--surface-3); padding: 24px; margin-bottom: 24px; }
+.form-card-title { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--surface-2); letter-spacing: -0.01em; }
+
+/* ── MODAL ── */
+.modal-overlay { position: fixed; inset: 0; background: rgba(13,15,20,0.55); z-index: 200; display: none; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+.modal-overlay.open { display: flex; }
+.modal { background: var(--white); border-radius: 16px; width: 90%; max-width: 520px; padding: 28px; animation: modalIn 0.2s ease; }
+@keyframes modalIn { from { transform: scale(0.95) translateY(8px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+.modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.modal-title { font-family: 'Syne', sans-serif; font-size: 16px; font-weight: 700; }
+.modal-close { background: var(--surface-2); border: none; border-radius: 6px; width: 28px; height: 28px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+.modal-close:hover { background: var(--surface-3); }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+/* ── VEHICLE PICKER ── */
+.field { display: grid; gap: 6px; margin-bottom: 0; }
+.field label { font-size: 12px; font-weight: 600; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.05em; }
+.field input, .field select {
+  border: 1px solid var(--surface-3);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--white);
+  transition: border-color 0.15s;
+  width: 100%;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,60,255,0.1); }
+
+.vehicle-list {
+  max-height: 200px;
+  overflow-y: auto;
+  border: 1px solid var(--surface-3);
+  border-radius: var(--radius-sm);
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vehicle-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.12s;
+  font-size: 13px;
+  color: var(--ink-2);
+  user-select: none;
+}
+.vehicle-option:hover { background: var(--surface); border-color: var(--surface-3); }
+.vehicle-option.selected { background: var(--accent-soft); border-color: rgba(26,60,255,0.3); color: var(--accent); }
+.vehicle-option input[type="checkbox"] { accent-color: var(--accent); width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; }
+
+/* ── TOAST ── */
+.toast { position: fixed; bottom: 28px; right: 28px; background: var(--ink); color: #fff; padding: 12px 20px; border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; z-index: 999; transform: translateY(80px); opacity: 0; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); pointer-events: none; }
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.ok { border-left: 3px solid #10b981; }
+.toast.error { border-left: 3px solid var(--accent-2); }
+
+/* ── LOADING / EMPTY ── */
+.loading { padding: 48px; text-align: center; color: var(--ink-3); font-size: 14px; }
+.spinner { display: inline-block; width: 20px; height: 20px; border: 2px solid var(--surface-3); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.6s linear infinite; margin-right: 8px; vertical-align: middle; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.empty { padding: 48px; text-align: center; color: var(--ink-3); font-size: 14px; }
+.empty-icon { font-size: 36px; margin-bottom: 12px; }
+.actions-cell { display: flex; gap: 6px; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">
+      <div class="brand-icon">🚗</div>
+      Car Rental
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <span class="nav-section-label">Minha Conta</span>
+    <button class="nav-item active" onclick="navigate('pedidos')">
+      <span class="nav-icon">📋</span> Meus Pedidos
+    </button>
+
+    <span class="nav-section-label">Explorar</span>
+    <button class="nav-item" onclick="navigate('automoveis')">
+      <span class="nav-icon">🚙</span> Automóveis
+    </button>
+
+    <span class="nav-section-label">Configurações</span>
+    <button class="nav-item" onclick="navigate('perfil')">
+      <span class="nav-icon">👤</span> Meu Perfil
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar" id="avatar-initials">–</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-username">Carregando...</div>
+        <div class="user-role">Cliente</div>
+      </div>
+      <button class="logout-btn" onclick="logout()" title="Sair">↩</button>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <span class="page-title" id="topbar-title">Meus Pedidos</span>
+    <div class="topbar-actions" id="topbar-actions">
+      <button class="btn btn-primary" onclick="abrirNovoPedido()">＋ Novo Pedido</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- STATS -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-label">Total de Pedidos</div>
+        <div class="stat-value" id="stat-total">–</div>
+        <div class="stat-sub">Todos os registros</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Pendentes</div>
+        <div class="stat-value" id="stat-pendentes">–</div>
+        <div class="stat-sub">Aguardando avaliação</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Aprovados</div>
+        <div class="stat-value" id="stat-aprovados">–</div>
+        <div class="stat-sub">Prontos para retirada</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">Rejeitados</div>
+        <div class="stat-value" id="stat-rejeitados">–</div>
+        <div class="stat-sub">Pedidos recusados</div>
+      </div>
+    </div>
+
+    <!-- SECTION: PEDIDOS -->
+    <section class="section active" id="section-pedidos">
+      <div class="section-header">
+        <h2 class="section-title">Meus Pedidos de Aluguel</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Data do Pedido</th>
+              <th>Período</th>
+              <th>Veículos</th>
+              <th>Valor Total</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-pedidos">
+            <tr><td colspan="7" class="loading"><span class="spinner"></span> Carregando pedidos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION: AUTOMÓVEIS -->
+    <section class="section" id="section-automoveis">
+      <div class="section-header">
+        <h2 class="section-title">Automóveis Disponíveis</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Marca / Modelo</th>
+              <th>Ano</th>
+              <th>Placa</th>
+              <th>Matrícula</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-automoveis">
+            <tr><td colspan="6" class="loading"><span class="spinner"></span> Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION: PERFIL -->
+    <section class="section" id="section-perfil">
+      <div class="form-card">
+        <div class="form-card-title">Informações Pessoais</div>
+        <div id="perfil-content">
+          <div class="loading"><span class="spinner"></span> Carregando perfil...</div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- MODAL: Novo Pedido -->
+<div class="modal-overlay" id="modal-pedido">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Solicitar Aluguel</span>
+      <button class="modal-close" onclick="closeModal('modal-pedido')">✕</button>
+    </div>
+    <div style="display:grid;gap:14px;">
+      <div class="field">
+        <label>Data e Hora de Início</label>
+        <input type="datetime-local" id="pedido-inicio">
+      </div>
+      <div class="field">
+        <label>Data e Hora de Fim</label>
+        <input type="datetime-local" id="pedido-fim">
+      </div>
+      <div class="field">
+        <label>Selecione o(s) Veículo(s)</label>
+        <div class="vehicle-list" id="vehicle-list">
+          <span style="color:var(--ink-3);font-size:13px;padding:8px;">Carregando veículos...</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-pedido')">Cancelar</button>
+      <button class="btn btn-primary" onclick="criarPedido()">Solicitar Aluguel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'http://localhost:8080';
+
+// ── AUTH SETUP ──
+const urlParams = new URLSearchParams(window.location.search);
+const tokenFromUrl = urlParams.get('token');
+if (tokenFromUrl) {
+    localStorage.setItem('jwtToken', tokenFromUrl);
+    window.history.replaceState({}, document.title, '/pages/dashboard-cliente');
+}
+let token = tokenFromUrl || localStorage.getItem('jwtToken');
+if (!token) { window.location.href = '/auth/login'; }
+
+// ── DECODE JWT PARA EXTRAIR clienteId ──
+function parseJwt(t) {
+    try {
+        const b64 = t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+        return JSON.parse(atob(b64));
+    } catch (e) { return {}; }
+}
+const claims = parseJwt(token);
+const clienteId = claims.id;
+if (!clienteId) { window.location.href = '/auth/login'; }
+
+let currentAutomoveis = [];
+
+// ── API ──
+function headers() {
+    return {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + token
+    };
+}
+
+async function api(method, path, body) {
+    try {
+        const res = await fetch(API + path, {
+            method,
+            headers: headers(),
+            body: body ? JSON.stringify(body) : undefined
+        });
+        if (res.status === 401) { logout(); return null; }
+        if (!res.ok) return null;
+        const text = await res.text();
+        return text ? JSON.parse(text) : {};
+    } catch (e) { return null; }
+}
+
+// ── TOAST ──
+function toast(msg, type = 'ok') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── MODAL ──
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openModal(id)  { document.getElementById(id).classList.add('open'); }
+
+// ── LOGOUT ──
+function logout() {
+    localStorage.removeItem('jwtToken');
+    localStorage.removeItem('tipoUsuario');
+    window.location.href = '/auth/login';
+}
+
+// ── BADGE ──
+function badgeStatus(s) {
+    const map = { PENDENTE: 'badge-pendente', APROVADO: 'badge-aprovado', REJEITADO: 'badge-rejeitado', CANCELADO: 'badge-cancelado' };
+    return `<span class="badge ${map[s] || ''}">${s}</span>`;
+}
+
+// ── NAVIGATION ──
+function navigate(page) {
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelector(`[onclick="navigate('${page}')"]`).classList.add('active');
+    document.getElementById('section-' + page).classList.add('active');
+
+    const titles = { pedidos: 'Meus Pedidos', automoveis: 'Automóveis Disponíveis', perfil: 'Meu Perfil' };
+    document.getElementById('topbar-title').textContent = titles[page];
+
+    const statsEl = document.getElementById('stats-grid');
+    statsEl.style.display = page === 'pedidos' ? 'grid' : 'none';
+
+    const actionsEl = document.getElementById('topbar-actions');
+    actionsEl.innerHTML = page === 'pedidos'
+        ? '<button class="btn btn-primary" onclick="abrirNovoPedido()">＋ Novo Pedido</button>'
+        : '';
+
+    if (page === 'pedidos')   loadPedidos();
+    if (page === 'automoveis') loadAutomoveis();
+    if (page === 'perfil')    loadPerfil();
+}
+
+// ── PEDIDOS ──
+async function loadPedidos() {
+    document.getElementById('tbody-pedidos').innerHTML =
+        `<tr><td colspan="7" class="loading"><span class="spinner"></span> Carregando pedidos...</td></tr>`;
+
+    const data = await api('GET', `/pedido?clienteId=${clienteId}`);
+    const lista = Array.isArray(data) ? data : [];
+
+    document.getElementById('stat-total').textContent      = lista.length;
+    document.getElementById('stat-pendentes').textContent  = lista.filter(p => p.status === 'PENDENTE').length;
+    document.getElementById('stat-aprovados').textContent  = lista.filter(p => p.status === 'APROVADO').length;
+    document.getElementById('stat-rejeitados').textContent = lista.filter(p => p.status === 'REJEITADO').length;
+
+    const tbody = document.getElementById('tbody-pedidos');
+
+    if (!lista.length) {
+        tbody.innerHTML = `<tr><td colspan="7" class="empty">
+            <div class="empty-icon">📋</div>Você ainda não tem pedidos.<br><br>
+            <button class="btn btn-primary" onclick="abrirNovoPedido()">＋ Fazer primeiro pedido</button>
+        </td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = lista.map(p => {
+        const inicio   = p.dataInicio  ? new Date(p.dataInicio).toLocaleString('pt-BR',  {dateStyle:'short', timeStyle:'short'}) : '–';
+        const fim      = p.dataFim     ? new Date(p.dataFim).toLocaleString('pt-BR',      {dateStyle:'short', timeStyle:'short'}) : '–';
+        const criado   = p.dataCriacao ? new Date(p.dataCriacao).toLocaleDateString('pt-BR') : '–';
+        const valor    = p.valorTotal  ? 'R$ ' + Number(p.valorTotal).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '–';
+        const veiculos = (p.automoveis && p.automoveis.length)
+            ? p.automoveis.map(a => `${a.marca} ${a.modelo}`).join(', ')
+            : '–';
+        const podeCancelar = p.status === 'PENDENTE';
+        const acoes = podeCancelar
+            ? `<button class="btn btn-sm btn-danger" onclick="cancelarPedido(${p.id})">✕ Cancelar</button>`
+            : `<span style="color:var(--ink-3);font-size:13px;">–</span>`;
+
+        return `<tr>
+            <td class="td-main">#${p.id}</td>
+            <td>${criado}</td>
+            <td style="white-space:nowrap">${inicio} → ${fim}</td>
+            <td style="max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${veiculos}">${veiculos}</td>
+            <td>${valor}</td>
+            <td>${badgeStatus(p.status)}</td>
+            <td><div class="actions-cell">${acoes}</div></td>
+        </tr>`;
+    }).join('');
+}
+
+async function cancelarPedido(id) {
+    if (!confirm('Deseja cancelar este pedido?')) return;
+    const res = await api('PUT', `/pedido/${id}/status`, { status: 'CANCELADO' });
+    if (res !== null) {
+        toast('Pedido cancelado.');
+        loadPedidos();
+    } else {
+        toast('Erro ao cancelar pedido.', 'error');
+    }
+}
+
+// ── AUTOMÓVEIS ──
+async function loadAutomoveis() {
+    document.getElementById('tbody-automoveis').innerHTML =
+        `<tr><td colspan="6" class="loading"><span class="spinner"></span> Carregando...</td></tr>`;
+
+    const data = await api('GET', '/automovel');
+    currentAutomoveis = Array.isArray(data) ? data : [];
+
+    const tbody = document.getElementById('tbody-automoveis');
+    if (!currentAutomoveis.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="empty"><div class="empty-icon">🚙</div>Nenhum automóvel disponível.</td></tr>`;
+        return;
+    }
+
+    tbody.innerHTML = currentAutomoveis.map(a => `<tr>
+        <td class="td-main">#${a.id}</td>
+        <td>${a.marca} ${a.modelo}</td>
+        <td>${a.ano}</td>
+        <td>${a.placa}</td>
+        <td>${a.matricula}</td>
+        <td><button class="btn btn-sm btn-primary" onclick="abrirNovoPedido(${a.id})">＋ Solicitar</button></td>
+    </tr>`).join('');
+}
+
+// ── PERFIL ──
+async function loadPerfil() {
+    const el = document.getElementById('perfil-content');
+    el.innerHTML = `<div class="loading"><span class="spinner"></span> Carregando perfil...</div>`;
+
+    const data = await api('GET', `/clientes/${clienteId}`);
+    if (!data) {
+        el.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div>Não foi possível carregar o perfil.</div>`;
+        return;
+    }
+
+    el.innerHTML = `
+        <div class="profile-grid">
+          <div>
+            <div class="profile-row"><div class="profile-label">Nome</div><div class="profile-value">${data.nome || '–'}</div></div>
+            <div class="profile-row"><div class="profile-label">Login</div><div class="profile-value">${data.login || '–'}</div></div>
+            <div class="profile-row"><div class="profile-label">CPF</div><div class="profile-value">${data.cpf || '–'}</div></div>
+          </div>
+          <div>
+            <div class="profile-row"><div class="profile-label">RG</div><div class="profile-value">${data.rg || '–'}</div></div>
+            <div class="profile-row"><div class="profile-label">Profissão</div><div class="profile-value">${data.profissao || '–'}</div></div>
+            <div class="profile-row"><div class="profile-label">Endereço</div><div class="profile-value">${data.endereco || '–'}</div></div>
+          </div>
+        </div>`;
+}
+
+// ── NOVO PEDIDO (MODAL) ──
+async function abrirNovoPedido(automovelPreSelecionado) {
+    if (!currentAutomoveis.length) {
+        const data = await api('GET', '/automovel');
+        currentAutomoveis = Array.isArray(data) ? data : [];
+    }
+
+    const listEl = document.getElementById('vehicle-list');
+    if (!currentAutomoveis.length) {
+        listEl.innerHTML = `<span style="color:var(--ink-3);font-size:13px;padding:8px;">Nenhum veículo disponível no momento.</span>`;
+    } else {
+        listEl.innerHTML = currentAutomoveis.map(a => {
+            const checked = automovelPreSelecionado === a.id ? 'checked' : '';
+            const selected = automovelPreSelecionado === a.id ? 'selected' : '';
+            return `
+            <label class="vehicle-option ${selected}" id="vo-${a.id}">
+                <input type="checkbox" value="${a.id}" ${checked} onchange="toggleVehicle(${a.id})">
+                <span>
+                    <strong>${a.marca} ${a.modelo}</strong>
+                    <span style="color:var(--ink-3);font-size:12px;display:block">${a.placa} · ${a.ano}</span>
+                </span>
+            </label>`;
+        }).join('');
+    }
+
+    document.getElementById('pedido-inicio').value = '';
+    document.getElementById('pedido-fim').value    = '';
+    openModal('modal-pedido');
+}
+
+function toggleVehicle(id) {
+    const el = document.getElementById(`vo-${id}`);
+    const cb = el?.querySelector('input[type="checkbox"]');
+    if (cb?.checked) el.classList.add('selected');
+    else el?.classList.remove('selected');
+}
+
+async function criarPedido() {
+    const inicio = document.getElementById('pedido-inicio').value;
+    const fim    = document.getElementById('pedido-fim').value;
+
+    if (!inicio || !fim) {
+        toast('Informe as datas de início e fim.', 'error');
+        return;
+    }
+    if (new Date(inicio) >= new Date(fim)) {
+        toast('A data de início deve ser anterior à data de fim.', 'error');
+        return;
+    }
+
+    const checked = document.querySelectorAll('#vehicle-list input[type="checkbox"]:checked');
+    const automovelIds = Array.from(checked).map(cb => Number(cb.value));
+    if (!automovelIds.length) {
+        toast('Selecione ao menos um veículo.', 'error');
+        return;
+    }
+
+    const body = {
+        dataInicio:   inicio + ':00',
+        dataFim:      fim    + ':00',
+        automovelIds
+    };
+
+    const res = await api('POST', `/pedido?clienteId=${clienteId}`, body);
+    if (res) {
+        toast('✓ Pedido criado com sucesso!');
+        closeModal('modal-pedido');
+        navigate('pedidos');
+    } else {
+        toast('Erro ao criar pedido. Verifique os dados e tente novamente.', 'error');
+    }
+}
+
+// ── LOAD USER INFO ──
+async function loadUserInfo() {
+    const data = await api('GET', `/clientes/${clienteId}`);
+    if (data && data.nome) {
+        document.getElementById('sidebar-username').textContent = data.nome;
+        document.getElementById('avatar-initials').textContent  = data.nome.slice(0, 2).toUpperCase();
+    }
+}
+
+// ── INIT ──
+loadUserInfo();
+loadPedidos();
+</script>
+</body>
+</html>

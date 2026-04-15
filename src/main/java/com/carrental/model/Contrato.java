@@ -1,5 +1,6 @@
 package com.carrental.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 import lombok.*;
@@ -25,6 +26,7 @@ public class Contrato {
     @Column(name = "data_fim")
     private LocalDateTime dataFim;
 
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
