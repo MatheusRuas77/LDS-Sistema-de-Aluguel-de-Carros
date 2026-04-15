@@ -33,7 +33,7 @@ public class Rendimento {
 	private BigDecimal valorMensal;
 
 	@ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "cliente_id", nullable = false)
 	private Cliente cliente;
 
 }
