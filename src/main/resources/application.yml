@@ -19,6 +19,8 @@ micronaut:
   security:
     enabled: true
     authentication: bearer
+    redirect:
+      enabled: false
     token:
       jwt:
         signatures:
@@ -28,6 +30,10 @@ micronaut:
               jca-algorithm: HmacSHA512
     intercept-url-map:
       - pattern: /auth/**
+        access:
+          - isAnonymous()
+      
+      - pattern: /pages/**
         access:
           - isAnonymous()
 

@@ -1,0 +1,1086 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Car Rental — Painel do Agente</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0d0f14;
+  --ink-2: #3a3d47;
+  --ink-3: #8891a4;
+  --surface: #f5f4f0;
+  --surface-2: #eceae4;
+  --surface-3: #e0ddd5;
+  --white: #ffffff;
+  --accent: #1a3cff;
+  --accent-soft: #e8ecff;
+  --accent-2: #ff4d1c;
+  --ok: #0d7a55;
+  --ok-soft: #d4f5e9;
+  --warn: #b45309;
+  --warn-soft: #fef3c7;
+  --danger: #c0180c;
+  --danger-soft: #fee2e2;
+  --pending: #5b21b6;
+  --pending-soft: #ede9fe;
+  --sidebar-w: 240px;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--surface);
+  color: var(--ink);
+  min-height: 100vh;
+  display: flex;
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: var(--sidebar-w);
+  min-height: 100vh;
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 100;
+}
+
+.sidebar-logo {
+  padding: 28px 24px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.sidebar-logo .brand {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-icon {
+  width: 32px; height: 32px;
+  background: var(--accent);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+
+.sidebar-nav {
+  flex: 1;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.3);
+  padding: 16px 12px 8px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: rgba(255,255,255,0.55);
+  font-size: 14px;
+  font-weight: 400;
+  transition: all 0.15s;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-item:hover {
+  background: rgba(255,255,255,0.07);
+  color: rgba(255,255,255,0.9);
+}
+
+.nav-item.active {
+  background: rgba(26,60,255,0.25);
+  color: #fff;
+  font-weight: 500;
+}
+
+.nav-item .nav-icon { font-size: 16px; width: 20px; text-align: center; }
+
+.nav-badge {
+  margin-left: auto;
+  background: var(--accent-2);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 999px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.sidebar-footer {
+  padding: 16px 12px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.user-info { flex: 1; min-width: 0; }
+.user-name { font-size: 13px; font-weight: 500; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 11px; color: rgba(255,255,255,0.4); }
+
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: rgba(255,255,255,0.35);
+  font-size: 16px;
+  padding: 4px;
+  border-radius: 6px;
+  transition: all 0.15s;
+}
+.logout-btn:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+/* ── MAIN ── */
+.main {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--surface-3);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.topbar-actions { display: flex; gap: 10px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover { background: #1230dd; }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--ink-2);
+  border: 1px solid var(--surface-3);
+}
+.btn-ghost:hover { background: var(--surface-2); }
+
+.btn-danger {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+.btn-danger:hover { background: #fecaca; }
+
+.btn-ok {
+  background: var(--ok-soft);
+  color: var(--ok);
+}
+.btn-ok:hover { background: #a7f3d0; }
+
+.btn-sm { padding: 5px 12px; font-size: 12px; }
+
+.content {
+  padding: 32px;
+  flex: 1;
+}
+
+/* ── STATS ── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  border: 1px solid var(--surface-3);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+}
+
+.stat-card.blue::before { background: var(--accent); }
+.stat-card.green::before { background: #10b981; }
+.stat-card.orange::before { background: #f59e0b; }
+.stat-card.red::before { background: var(--accent-2); }
+
+.stat-label {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+
+.stat-value {
+  font-family: 'Syne', sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--ink);
+}
+
+.stat-sub {
+  font-size: 12px;
+  color: var(--ink-3);
+  margin-top: 6px;
+}
+
+/* ── SECTIONS ── */
+.section { display: none; }
+.section.active { display: block; }
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ── TABLE ── */
+.table-wrap {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--surface-3);
+  overflow: hidden;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  background: var(--surface);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ink-3);
+  border-bottom: 1px solid var(--surface-3);
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--surface-2);
+  transition: background 0.1s;
+}
+
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: var(--surface); }
+
+tbody td {
+  padding: 13px 16px;
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.td-main { color: var(--ink); font-weight: 500; }
+
+/* ── BADGES ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.badge-pendente { background: var(--pending-soft); color: var(--pending); }
+.badge-aprovado { background: var(--ok-soft); color: var(--ok); }
+.badge-rejeitado { background: var(--danger-soft); color: var(--danger); }
+.badge-cancelado { background: var(--surface-2); color: var(--ink-3); }
+
+/* ── FORM ── */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-grid.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-full { grid-column: 1 / -1; }
+
+.field { display: grid; gap: 6px; }
+.field label { font-size: 12px; font-weight: 600; color: var(--ink-2); text-transform: uppercase; letter-spacing: 0.05em; }
+
+.field input, .field select {
+  border: 1px solid var(--surface-3);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--white);
+  transition: border-color 0.15s;
+  width: 100%;
+}
+
+.field input:focus, .field select:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(26,60,255,0.1);
+}
+
+.form-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  border: 1px solid var(--surface-3);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.form-card-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 18px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--surface-2);
+  letter-spacing: -0.01em;
+}
+
+/* ── MODAL ── */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13,15,20,0.55);
+  z-index: 200;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(2px);
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--white);
+  border-radius: 16px;
+  width: 90%;
+  max-width: 480px;
+  padding: 28px;
+  animation: modalIn 0.2s ease;
+}
+
+@keyframes modalIn {
+  from { transform: scale(0.95) translateY(8px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.modal-close {
+  background: var(--surface-2);
+  border: none;
+  border-radius: 6px;
+  width: 28px; height: 28px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.modal-close:hover { background: var(--surface-3); }
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: var(--ink);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 999;
+  transform: translateY(80px);
+  opacity: 0;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  pointer-events: none;
+}
+
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.ok { border-left: 3px solid #10b981; }
+.toast.error { border-left: 3px solid var(--accent-2); }
+
+/* ── LOADING ── */
+.loading {
+  padding: 48px;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 14px;
+}
+
+.spinner {
+  display: inline-block;
+  width: 20px; height: 20px;
+  border: 2px solid var(--surface-3);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty {
+  padding: 48px;
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 14px;
+}
+
+.empty-icon { font-size: 36px; margin-bottom: 12px; }
+
+/* ── ACTIONS ── */
+.actions-cell { display: flex; gap: 6px; }
+
+/* filter bar */
+.filter-bar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.filter-bar select,
+.filter-bar input {
+  border: 1px solid var(--surface-3);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  background: var(--white);
+  color: var(--ink);
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">
+      <div class="brand-icon">🚗</div>
+      Car Rental
+    </div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <span class="nav-section-label">Visão Geral</span>
+    <button class="nav-item active" onclick="navigate('pedidos')">
+      <span class="nav-icon">📋</span> Pedidos
+      <span class="nav-badge" id="badge-pendentes">0</span>
+    </button>
+
+    <span class="nav-section-label">Gestão</span>
+    <button class="nav-item" onclick="navigate('automoveis')">
+      <span class="nav-icon">🚙</span> Automóveis
+    </button>
+    <button class="nav-item" onclick="navigate('clientes')">
+      <span class="nav-icon">👥</span> Clientes
+    </button>
+    <button class="nav-item" onclick="navigate('contratos')">
+      <span class="nav-icon">📄</span> Contratos
+    </button>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-card">
+      <div class="avatar" id="avatar-initials">–</div>
+      <div class="user-info">
+        <div class="user-name" id="sidebar-username">Carregando...</div>
+        <div class="user-role">Agente · Empresa</div>
+      </div>
+      <button class="logout-btn" onclick="logout()" title="Sair">↩</button>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <header class="topbar">
+    <span class="page-title" id="topbar-title">Pedidos</span>
+    <div class="topbar-actions" id="topbar-actions"></div>
+  </header>
+
+  <div class="content">
+
+    <!-- STATS -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card blue">
+        <div class="stat-label">Total de Pedidos</div>
+        <div class="stat-value" id="stat-total">–</div>
+        <div class="stat-sub">Todos os registros</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="stat-label">Pendentes</div>
+        <div class="stat-value" id="stat-pendentes">–</div>
+        <div class="stat-sub">Aguardando avaliação</div>
+      </div>
+      <div class="stat-card green">
+        <div class="stat-label">Aprovados</div>
+        <div class="stat-value" id="stat-aprovados">–</div>
+        <div class="stat-sub">Contratos gerados</div>
+      </div>
+      <div class="stat-card red">
+        <div class="stat-label">Rejeitados</div>
+        <div class="stat-value" id="stat-rejeitados">–</div>
+        <div class="stat-sub">Pedidos recusados</div>
+      </div>
+    </div>
+
+    <!-- SECTION: PEDIDOS -->
+    <section class="section active" id="section-pedidos">
+      <div class="section-header">
+        <h2 class="section-title">Pedidos de Aluguel</h2>
+      </div>
+      <div class="filter-bar">
+        <select id="filter-status" onchange="renderPedidos()">
+          <option value="">Todos os status</option>
+          <option value="PENDENTE">Pendente</option>
+          <option value="APROVADO">Aprovado</option>
+          <option value="REJEITADO">Rejeitado</option>
+          <option value="CANCELADO">Cancelado</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Cliente</th>
+              <th>Data do Pedido</th>
+              <th>Período</th>
+              <th>Valor Total</th>
+              <th>Status</th>
+              <th>Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tbody-pedidos">
+            <tr><td colspan="7" class="loading"><span class="spinner"></span> Carregando pedidos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION: AUTOMÓVEIS -->
+    <section class="section" id="section-automoveis">
+      <div class="form-card">
+        <div class="form-card-title">Cadastrar Novo Automóvel</div>
+        <div class="form-grid cols-3">
+          <div class="field"><label>Marca</label><input id="auto-marca" placeholder="ex: Toyota"></div>
+          <div class="field"><label>Modelo</label><input id="auto-modelo" placeholder="ex: Corolla"></div>
+          <div class="field"><label>Ano</label><input id="auto-ano" type="number" placeholder="ex: 2022"></div>
+          <div class="field"><label>Placa</label><input id="auto-placa" placeholder="ex: ABC-1234"></div>
+          <div class="field"><label>Matrícula</label><input id="auto-matricula" placeholder="ex: MAT001"></div>
+        </div>
+        <div style="margin-top:16px; display:flex; justify-content:flex-end;">
+          <button class="btn btn-primary" onclick="cadastrarAutomovel()">＋ Cadastrar</button>
+        </div>
+      </div>
+      <div class="section-header">
+        <h2 class="section-title">Automóveis Cadastrados</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Marca / Modelo</th><th>Ano</th><th>Placa</th><th>Matrícula</th><th>Ações</th></tr>
+          </thead>
+          <tbody id="tbody-automoveis">
+            <tr><td colspan="6" class="loading"><span class="spinner"></span> Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION: CLIENTES -->
+    <section class="section" id="section-clientes">
+      <div class="section-header">
+        <h2 class="section-title">Clientes Cadastrados</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Nome</th><th>Login</th><th>CPF</th><th>RG</th><th>Profissão</th></tr>
+          </thead>
+          <tbody id="tbody-clientes">
+            <tr><td colspan="6" class="loading"><span class="spinner"></span> Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SECTION: CONTRATOS -->
+    <section class="section" id="section-contratos">
+      <div class="section-header">
+        <h2 class="section-title">Contratos</h2>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>#</th><th>Pedido</th><th>Data Início</th><th>Data Fim</th></tr>
+          </thead>
+          <tbody id="tbody-contratos">
+            <tr><td colspan="4" class="loading"><span class="spinner"></span> Carregando...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- MODAL: Avaliar Pedido -->
+<div class="modal-overlay" id="modal-pedido">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Avaliar Pedido</span>
+      <button class="modal-close" onclick="closeModal('modal-pedido')">✕</button>
+    </div>
+    <div id="modal-pedido-body"></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-pedido')">Cancelar</button>
+      <button class="btn btn-danger" id="btn-rejeitar" onclick="avaliarPedido('REJEITADO')">✗ Rejeitar</button>
+      <button class="btn btn-ok" id="btn-aprovar" onclick="avaliarPedido('APROVADO')">✓ Aprovar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Editar Automóvel -->
+<div class="modal-overlay" id="modal-automovel">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title">Editar Automóvel</span>
+      <button class="modal-close" onclick="closeModal('modal-automovel')">✕</button>
+    </div>
+    <div class="form-grid" style="margin-top:4px;">
+      <div class="field"><label>Marca</label><input id="edit-marca"></div>
+      <div class="field"><label>Modelo</label><input id="edit-modelo"></div>
+      <div class="field"><label>Ano</label><input id="edit-ano" type="number"></div>
+      <div class="field"><label>Placa</label><input id="edit-placa"></div>
+      <div class="field form-full"><label>Matrícula</label><input id="edit-matricula"></div>
+    </div>
+    <input type="hidden" id="edit-auto-id">
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-automovel')">Cancelar</button>
+      <button class="btn btn-primary" onclick="salvarAutomovel()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const API = 'http://localhost:8080';
+
+const urlParams = new URLSearchParams(window.location.search);
+const tokenFromUrl = urlParams.get('token');
+if (tokenFromUrl) {
+    localStorage.setItem('jwtToken', tokenFromUrl);
+    window.history.replaceState({}, document.title, '/pages/dashboard-agente');
+}
+let token = tokenFromUrl || localStorage.getItem('jwtToken');
+let currentPedidos = [];
+let pedidoAtual = null;
+
+// ── AUTH CHECK ──
+if (!token) { window.location.href = '/auth/login'; }
+
+function headers() {
+  return {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'Authorization': 'Bearer ' + token
+  };
+}
+
+async function api(method, path, body) {
+  try {
+    const res = await fetch(API + path, {
+      method,
+      headers: headers(),
+      body: body ? JSON.stringify(body) : undefined
+    });
+    if (res.status === 401) { logout(); return null; }
+    if (!res.ok) return null;
+    const text = await res.text();
+    return text ? JSON.parse(text) : {};
+  } catch (e) { return null; }
+}
+
+// ── TOAST ──
+function toast(msg, type = 'ok') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + type;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ── MODAL ──
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+
+// ── LOGOUT ──
+function logout() {
+  localStorage.removeItem('jwtToken');
+  localStorage.removeItem('tipoUsuario');
+  window.location.href = '/auth/login';
+}
+
+// ── NAVIGATION ──
+function navigate(page) {
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelector(`[onclick="navigate('${page}')"]`).classList.add('active');
+  document.getElementById('section-' + page).classList.add('active');
+
+  const titles = { pedidos: 'Pedidos', automoveis: 'Automóveis', clientes: 'Clientes', contratos: 'Contratos' };
+  document.getElementById('topbar-title').textContent = titles[page];
+
+  const statsEl = document.getElementById('stats-grid');
+  statsEl.style.display = page === 'pedidos' ? 'grid' : 'none';
+
+  const actions = document.getElementById('topbar-actions');
+  actions.innerHTML = '';
+
+  if (page === 'pedidos') loadPedidos();
+  if (page === 'automoveis') loadAutomoveis();
+  if (page === 'clientes') loadClientes();
+  if (page === 'contratos') loadContratos();
+}
+
+// ── LOAD USER ──
+async function loadUserInfo() {
+  const nome = localStorage.getItem('tipoUsuario') || 'Agente';
+  // tentar pegar dados do agente logado
+  const agentes = await api('GET', '/agentes');
+  if (agentes && agentes.length > 0) {
+    // tenta identificar o agente pelo token (pega o primeiro por ora)
+    const nomeExibido = agentes[0].nome || 'Agente';
+    document.getElementById('sidebar-username').textContent = nomeExibido;
+    document.getElementById('avatar-initials').textContent = nomeExibido.slice(0, 2).toUpperCase();
+  }
+}
+
+// ── PEDIDOS ──
+async function loadPedidos() {
+  const data = await api('GET', '/pedidos');
+  currentPedidos = data || [];
+
+  const pendentes = currentPedidos.filter(p => p.status === 'PENDENTE').length;
+  const aprovados = currentPedidos.filter(p => p.status === 'APROVADO').length;
+  const rejeitados = currentPedidos.filter(p => p.status === 'REJEITADO').length;
+
+  document.getElementById('stat-total').textContent = currentPedidos.length;
+  document.getElementById('stat-pendentes').textContent = pendentes;
+  document.getElementById('stat-aprovados').textContent = aprovados;
+  document.getElementById('stat-rejeitados').textContent = rejeitados;
+  document.getElementById('badge-pendentes').textContent = pendentes;
+
+  renderPedidos();
+}
+
+function renderPedidos() {
+  const filtro = document.getElementById('filter-status').value;
+  const lista = filtro ? currentPedidos.filter(p => p.status === filtro) : currentPedidos;
+  const tbody = document.getElementById('tbody-pedidos');
+
+  if (!lista.length) {
+    tbody.innerHTML = `<tr><td colspan="7" class="empty"><div class="empty-icon">📋</div>Nenhum pedido encontrado.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = lista.map(p => {
+    const badge = badgeStatus(p.status);
+    const inicio = p.dataInicio ? new Date(p.dataInicio).toLocaleDateString('pt-BR') : '–';
+    const fim = p.dataFim ? new Date(p.dataFim).toLocaleDateString('pt-BR') : '–';
+    const criado = p.dataCriacao ? new Date(p.dataCriacao).toLocaleDateString('pt-BR') : '–';
+    const valor = p.valorTotal ? 'R$ ' + Number(p.valorTotal).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '–';
+    const acoes = p.status === 'PENDENTE'
+      ? `<button class="btn btn-sm btn-ok" onclick="abrirAvaliar(${p.id})">Avaliar</button>`
+      : `<span style="color:var(--ink-3);font-size:13px;">–</span>`;
+    return `<tr>
+      <td class="td-main">#${p.id}</td>
+      <td>${p.clienteId || p.cliente?.nome || '–'}</td>
+      <td>${criado}</td>
+      <td>${inicio} → ${fim}</td>
+      <td>${valor}</td>
+      <td>${badge}</td>
+      <td><div class="actions-cell">${acoes}</div></td>
+    </tr>`;
+  }).join('');
+}
+
+function badgeStatus(s) {
+  const map = {
+    PENDENTE: 'badge-pendente',
+    APROVADO: 'badge-aprovado',
+    REJEITADO: 'badge-rejeitado',
+    CANCELADO: 'badge-cancelado'
+  };
+  return `<span class="badge ${map[s] || ''}">${s}</span>`;
+}
+
+function abrirAvaliar(id) {
+  pedidoAtual = currentPedidos.find(p => p.id === id);
+  if (!pedidoAtual) return;
+  const inicio = pedidoAtual.dataInicio ? new Date(pedidoAtual.dataInicio).toLocaleDateString('pt-BR') : '–';
+  const fim = pedidoAtual.dataFim ? new Date(pedidoAtual.dataFim).toLocaleDateString('pt-BR') : '–';
+  const valor = pedidoAtual.valorTotal ? 'R$ ' + Number(pedidoAtual.valorTotal).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '–';
+  document.getElementById('modal-pedido-body').innerHTML = `
+    <div style="display:grid;gap:10px;font-size:14px;color:var(--ink-2);">
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--surface-2);">
+        <span style="color:var(--ink-3)">Pedido</span><strong>#${pedidoAtual.id}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--surface-2);">
+        <span style="color:var(--ink-3)">Período</span><span>${inicio} → ${fim}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--surface-2);">
+        <span style="color:var(--ink-3)">Valor Total</span><strong>${valor}</strong>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:10px 0;">
+        <span style="color:var(--ink-3)">Status atual</span>${badgeStatus(pedidoAtual.status)}
+      </div>
+    </div>`;
+  openModal('modal-pedido');
+}
+
+async function avaliarPedido(novoStatus) {
+  if (!pedidoAtual) return;
+  const updated = { ...pedidoAtual, status: novoStatus, agenteResponsavelId: pedidoAtual.agenteResponsavelId };
+  const res = await api('PUT', '/pedidos/' + pedidoAtual.id, { ...pedidoAtual, status: novoStatus });
+  if (res !== null) {
+    toast(novoStatus === 'APROVADO' ? '✓ Pedido aprovado!' : '✗ Pedido rejeitado.', novoStatus === 'APROVADO' ? 'ok' : 'error');
+    closeModal('modal-pedido');
+    loadPedidos();
+  } else {
+    toast('Erro ao atualizar pedido.', 'error');
+  }
+}
+
+// ── AUTOMÓVEIS ──
+async function loadAutomoveis() {
+  const data = await api('GET', '/automovel');
+  const tbody = document.getElementById('tbody-automoveis');
+  if (!data || !data.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty"><div class="empty-icon">🚙</div>Nenhum automóvel cadastrado.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map(a => `<tr>
+    <td class="td-main">#${a.id}</td>
+    <td>${a.marca} ${a.modelo}</td>
+    <td>${a.ano}</td>
+    <td>${a.placa}</td>
+    <td>${a.matricula}</td>
+    <td><div class="actions-cell">
+      <button class="btn btn-sm btn-ghost" onclick="editarAutomovel(${JSON.stringify(a).replace(/"/g,'&quot;')})">✎ Editar</button>
+      <button class="btn btn-sm btn-danger" onclick="deletarAutomovel(${a.id})">✕</button>
+    </div></td>
+  </tr>`).join('');
+}
+
+async function cadastrarAutomovel() {
+  const body = {
+    marca: document.getElementById('auto-marca').value,
+    modelo: document.getElementById('auto-modelo').value,
+    ano: parseInt(document.getElementById('auto-ano').value),
+    placa: document.getElementById('auto-placa').value,
+    matricula: document.getElementById('auto-matricula').value
+  };
+  if (!body.marca || !body.modelo || !body.ano || !body.placa || !body.matricula) {
+    toast('Preencha todos os campos.', 'error'); return;
+  }
+  const res = await api('POST', '/automovel', body);
+  if (res) {
+    toast('✓ Automóvel cadastrado!');
+    ['auto-marca','auto-modelo','auto-ano','auto-placa','auto-matricula'].forEach(id => document.getElementById(id).value = '');
+    loadAutomoveis();
+  } else { toast('Erro ao cadastrar.', 'error'); }
+}
+
+function editarAutomovel(a) {
+  document.getElementById('edit-auto-id').value = a.id;
+  document.getElementById('edit-marca').value = a.marca;
+  document.getElementById('edit-modelo').value = a.modelo;
+  document.getElementById('edit-ano').value = a.ano;
+  document.getElementById('edit-placa').value = a.placa;
+  document.getElementById('edit-matricula').value = a.matricula;
+  openModal('modal-automovel');
+}
+
+async function salvarAutomovel() {
+  const id = document.getElementById('edit-auto-id').value;
+  const body = {
+    marca: document.getElementById('edit-marca').value,
+    modelo: document.getElementById('edit-modelo').value,
+    ano: parseInt(document.getElementById('edit-ano').value),
+    placa: document.getElementById('edit-placa').value,
+    matricula: document.getElementById('edit-matricula').value
+  };
+  const res = await api('PUT', '/automovel/' + id, body);
+  if (res !== null) {
+    toast('✓ Automóvel atualizado!');
+    closeModal('modal-automovel');
+    loadAutomoveis();
+  } else { toast('Erro ao salvar.', 'error'); }
+}
+
+async function deletarAutomovel(id) {
+  if (!confirm('Excluir este automóvel?')) return;
+  await api('DELETE', '/automovel/' + id);
+  toast('Automóvel removido.');
+  loadAutomoveis();
+}
+
+// ── CLIENTES ──
+async function loadClientes() {
+  const data = await api('GET', '/clientes');
+  const tbody = document.getElementById('tbody-clientes');
+  if (!data || !data.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty"><div class="empty-icon">👥</div>Nenhum cliente encontrado.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map(c => `<tr>
+    <td class="td-main">#${c.id}</td>
+    <td>${c.nome || '–'}</td>
+    <td>${c.login || '–'}</td>
+    <td>${c.cpf || '–'}</td>
+    <td>${c.rg || '–'}</td>
+    <td>${c.profissao || '–'}</td>
+  </tr>`).join('');
+}
+
+// ── CONTRATOS ──
+async function loadContratos() {
+  const data = await api('GET', '/contratos');
+  const tbody = document.getElementById('tbody-contratos');
+  if (!data || !data.length) {
+    tbody.innerHTML = `<tr><td colspan="4" class="empty"><div class="empty-icon">📄</div>Nenhum contrato encontrado.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = data.map(c => `<tr>
+    <td class="td-main">#${c.id}</td>
+    <td>#${c.pedidoId || c.pedido?.id || '–'}</td>
+    <td>${c.dataInicio ? new Date(c.dataInicio).toLocaleDateString('pt-BR') : '–'}</td>
+    <td>${c.dataFim ? new Date(c.dataFim).toLocaleDateString('pt-BR') : '–'}</td>
+  </tr>`).join('');
+}
+
+// ── INIT ──
+loadUserInfo();
+loadPedidos();
+</script>
+</body>
+</html>

@@ -262,7 +262,7 @@
             payload = null;
         }
 
-        return { response, payload, endpoint };
+        return { response, payload };
     }
 
     form.addEventListener('submit', async (event) => {
@@ -282,7 +282,6 @@
         try {
             const endpoints = ['/auth/login/agente', '/auth/login/cliente'];
             let payload = null;
-            let successEndpoint = null;
             let success = false;
             let lastErrorMessage = 'Login ou senha invalidos.';
 
@@ -290,7 +289,6 @@
                 const result = await tryLogin(login, senha, endpoint);
                 if (result.response.ok) {
                     payload = result.payload;
-                    successEndpoint = result.endpoint;
                     success = true;
                     break;
                 }
@@ -302,6 +300,7 @@
                 return;
             }
 
+
             const token = payload && payload.token;
             const tipoUsuario = payload && payload.tipoUsuario;
 
@@ -310,20 +309,12 @@
                 return;
             }
 
-            document.cookie = `jwtToken=${token}; path=/; SameSite=Strict`;
-            document.cookie = `tipoUsuario=${tipoUsuario}; path=/; SameSite=Strict`;
+            localStorage.setItem('jwtToken', token);
+            if (tipoUsuario) {
+                localStorage.setItem('tipoUsuario', tipoUsuario);
+            }
 
-            setStatus('Login realizado com sucesso. Redirecionando...', 'ok');
-
-            // Redireciona conforme o tipo de usuário
-            setTimeout(() => {
-                if (successEndpoint === '/auth/login/agente') {
-                    window.location.href = '/pages/dashboard-agente?token=' + token;
-                } else {
-                    window.location.href = '/pages/dashboard-cliente?token=' + token;
-                }
-            }, 800);
-
+            setStatus('Login realizado com sucesso. Bem-vindo(a)!', 'ok');
         } catch (error) {
             setStatus('Erro de conexao com a API: ' + error.message, 'error');
         } finally {
@@ -333,3 +324,4 @@
 </script>
 </body>
 </html>
+

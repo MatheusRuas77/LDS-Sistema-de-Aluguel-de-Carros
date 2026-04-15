@@ -3,6 +3,7 @@ package com.carrental.service;
 import com.carrental.exception.InvalidCredentialsException;
 import com.carrental.model.Agente;
 import com.carrental.repository.AgenteRepository;
+import com.carrental.security.JwtUtil;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
@@ -16,12 +17,12 @@ import java.util.Optional;
 public class AgenteService {
 
     private final AgenteRepository repository;
-    private final JwtService jwtService;
+    private final JwtUtil jwtUtil;
 
     @Inject
-    public AgenteService(AgenteRepository repository, JwtService jwtService) {
+    public AgenteService(AgenteRepository repository, JwtUtil jwtUtil) {
         this.repository = repository;
-        this.jwtService = jwtService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Transactional
@@ -76,7 +77,7 @@ public class AgenteService {
             throw new InvalidCredentialsException("Login ou senha invalidos");
         }
 
-        return jwtService.gerarToken(
+        return jwtUtil.gerarToken(
                 agente.getId(),
                 agente.getLogin(),
                 "AGENTE",
