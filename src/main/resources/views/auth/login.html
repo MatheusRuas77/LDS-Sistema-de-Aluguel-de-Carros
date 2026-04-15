@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental - Login</title>
+    <style>
+        :root {
+            --bg-1: #0b1020;
+            --bg-2: #111a35;
+            --card: #f9fbff;
+            --accent: #3967ff;
+            --accent-hover: #2b52d1;
+            --muted: #64748b;
+            --danger: #b91c1c;
+            --ok: #166534;
+            --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+            background: radial-gradient(circle at 20% 10%, #203370 0%, transparent 35%),
+                        radial-gradient(circle at 85% 85%, #2a3e88 0%, transparent 40%),
+                        linear-gradient(135deg, var(--bg-1), var(--bg-2));
+            color: #0f172a;
+            display: grid;
+            place-items: center;
+            padding: 24px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 980px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+            align-items: stretch;
+        }
+
+        .hero,
+        .card {
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .hero {
+            background: linear-gradient(165deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #f8fafc;
+            padding: 34px;
+            backdrop-filter: blur(6px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .hero h1 {
+            margin: 0;
+            font-size: clamp(1.7rem, 3vw, 2.4rem);
+            line-height: 1.2;
+        }
+
+        .hero p {
+            margin: 10px 0 0;
+            color: #cbd5e1;
+            line-height: 1.55;
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            width: fit-content;
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 999px;
+            padding: 7px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .hero-list {
+            margin: 12px 0 0;
+            padding-left: 18px;
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+
+        .card {
+            background: var(--card);
+            padding: 30px;
+            border: 1px solid rgba(15, 23, 42, 0.08);
+        }
+
+        .title {
+            margin: 0 0 6px;
+            font-size: 1.55rem;
+        }
+
+        .subtitle {
+            margin: 0 0 22px;
+            color: var(--muted);
+            font-size: 0.95rem;
+        }
+
+        form {
+            display: grid;
+            gap: 14px;
+        }
+
+        .field {
+            display: grid;
+            gap: 7px;
+        }
+
+        label {
+            font-size: 0.9rem;
+            color: #1e293b;
+            font-weight: 600;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid #cbd5e1;
+            padding: 12px 14px;
+            font-size: 0.98rem;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(57, 103, 255, 0.15);
+        }
+
+        button {
+            margin-top: 6px;
+            border: none;
+            background: var(--accent);
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            transition: 0.2s ease;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        button:hover { background: var(--accent-hover); }
+
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .status {
+            margin-top: 14px;
+            min-height: 24px;
+            font-size: 0.92rem;
+            line-height: 1.35;
+        }
+
+        .status.ok { color: var(--ok); }
+        .status.error { color: var(--danger); }
+
+        .helper {
+            margin-top: 16px;
+            color: #475569;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 850px) {
+            .container { grid-template-columns: 1fr; }
+            .hero { order: 2; }
+            .card { order: 1; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <section class="hero">
+        <div>
+            <span class="tag">Car Rental</span>
+            <h1>Entre e gerencie seus alugueis com facilidade</h1>
+            <p>
+                Acesse sua conta para acompanhar pedidos, contratos e informacoes do seu perfil.
+            </p>
+            <ul class="hero-list">
+                <li>Fluxo unico para cliente e agente</li>
+                <li>Interface simples e rapida</li>
+                <li>Experiencia focada no uso da aplicacao</li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="card">
+        <h2 class="title">Entrar na plataforma</h2>
+        <p class="subtitle">Informe suas credenciais para continuar.</p>
+
+        <form id="login-form">
+            <div class="field">
+                <label for="login">Login</label>
+                <input id="login" name="login" type="text" placeholder="ex: lucas" required>
+            </div>
+
+            <div class="field">
+                <label for="senha">Senha</label>
+                <input id="senha" name="senha" type="password" placeholder="Digite sua senha" required>
+            </div>
+
+            <button id="submit-btn" type="submit">Entrar</button>
+        </form>
+
+        <div id="status" class="status" aria-live="polite"></div>
+        <p class="helper">Se houver erro de acesso, revise seu login e senha.</p>
+    </section>
+</div>
+
+<script>
+    const form = document.getElementById('login-form');
+    const statusBox = document.getElementById('status');
+    const submitButton = document.getElementById('submit-btn');
+
+    function setStatus(message, type) {
+        statusBox.className = 'status ' + (type || '');
+        statusBox.textContent = message || '';
+    }
+
+    function parseErrorPayload(payload) {
+        if (!payload) return 'Falha no login. Tente novamente.';
+        if (payload.message) return payload.message;
+        if (payload._embedded && payload._embedded.errors && payload._embedded.errors[0] && payload._embedded.errors[0].message) {
+            return payload._embedded.errors[0].message;
+        }
+        return 'Falha no login. Tente novamente.';
+    }
+
+    async function tryLogin(login, senha, endpoint) {
+        const response = await fetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ login, senha })
+        });
+
+        let payload = null;
+        try {
+            payload = await response.json();
+        } catch (ignore) {
+            payload = null;
+        }
+
+        return { response, payload };
+    }
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const login = document.getElementById('login').value.trim();
+        const senha = document.getElementById('senha').value;
+
+        if (!login || !senha) {
+            setStatus('Preencha login e senha.', 'error');
+            return;
+        }
+
+        submitButton.disabled = true;
+        setStatus('Autenticando...', '');
+
+        try {
+            const endpoints = ['/auth/login/agente', '/auth/login/cliente'];
+            let payload = null;
+            let success = false;
+            let lastErrorMessage = 'Login ou senha invalidos.';
+
+            for (const endpoint of endpoints) {
+                const result = await tryLogin(login, senha, endpoint);
+                if (result.response.ok) {
+                    payload = result.payload;
+                    success = true;
+                    break;
+                }
+                lastErrorMessage = parseErrorPayload(result.payload) || lastErrorMessage;
+            }
+
+            if (!success) {
+                setStatus(lastErrorMessage, 'error');
+                return;
+            }
+
+
+            const token = payload && payload.token;
+            const tipoUsuario = payload && payload.tipoUsuario;
+
+            if (!token) {
+                setStatus('Login concluido, mas token nao foi retornado.', 'error');
+                return;
+            }
+
+            localStorage.setItem('jwtToken', token);
+            if (tipoUsuario) {
+                localStorage.setItem('tipoUsuario', tipoUsuario);
+            }
+
+            setStatus('Login realizado com sucesso. Bem-vindo(a)!', 'ok');
+        } catch (error) {
+            setStatus('Erro de conexao com a API: ' + error.message, 'error');
+        } finally {
+            submitButton.disabled = false;
+        }
+    });
+</script>
+</body>
+</html>
+

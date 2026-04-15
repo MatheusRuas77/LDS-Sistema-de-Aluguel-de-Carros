@@ -1,8 +1,8 @@
 package com.carrental.service;
 
+import com.carrental.exception.InvalidCredentialsException;
 import com.carrental.model.Agente;
 import com.carrental.repository.AgenteRepository;
-import io.micronaut.core.annotation.NonNull;
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
@@ -68,8 +68,12 @@ public class AgenteService {
     public String autenticar(String login, String senha) {
         Agente agente = repository.findByLogin(login);
 
+        if (agente == null) {
+            throw new InvalidCredentialsException("Login ou senha invalidos");
+        }
+
         if (!BCrypt.checkpw(senha, agente.getSenha())) {
-            throw new IllegalArgumentException("Senha inválida");
+            throw new InvalidCredentialsException("Login ou senha invalidos");
         }
 
         return jwtService.gerarToken(
