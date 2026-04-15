@@ -34,9 +34,6 @@ public class Cliente extends Usuario {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Rendimento> rendimentos = new ArrayList<>();
-/* 
-
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
     private List<Pedido> pedidos = new ArrayList<>();
-    */
 }
