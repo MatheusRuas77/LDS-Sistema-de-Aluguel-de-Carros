@@ -10,6 +10,12 @@ import java.util.List;
 
 @Repository
 public interface PedidoRepository extends CrudRepository<Pedido, Long> {
+    @Query("""
+    SELECT p
+    FROM Pedido p
+    WHERE p.cliente.id = :clienteId
+    ORDER BY p.dataCriacao DESC
+    """)
     List<Pedido> findByClienteId(Long clienteId);
 
     @Query("""

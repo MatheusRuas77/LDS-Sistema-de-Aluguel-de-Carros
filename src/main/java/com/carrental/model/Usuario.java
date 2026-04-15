@@ -1,7 +1,6 @@
 package com.carrental.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.micronaut.serde.annotation.Serdeable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -11,7 +10,6 @@ import lombok.*;
 @Table(name = "usuarios")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "tipo_usuario")
-@JsonDeserialize(as = Cliente.class)
 @Serdeable
 @Getter
 @Setter
@@ -31,7 +29,7 @@ public abstract class Usuario {
     @Column(nullable = false, unique = true, length = 100)
     private String login;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank
     @Column(nullable = false, length = 60)
     private String senha;
