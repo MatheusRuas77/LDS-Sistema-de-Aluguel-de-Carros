@@ -42,6 +42,10 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
 
     implementation("org.mindrot:jbcrypt:0.4")
+    implementation("io.micronaut.security:micronaut-security")
+    implementation("io.micronaut.security:micronaut-security-jwt")
+    implementation("io.micronaut.rxjava3:micronaut-rxjava3")
+
 }
 
 
