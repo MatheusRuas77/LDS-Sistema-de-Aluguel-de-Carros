@@ -5,10 +5,11 @@ import com.carrental.model.Pedido;
 import com.carrental.service.ClienteService;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.*;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 import java.util.Optional;
-
+@Tag(name = "Cliente")
 @Controller("/clientes")
 public class ClienteController {
 

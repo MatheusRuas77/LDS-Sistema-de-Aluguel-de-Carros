@@ -8,9 +8,10 @@ import io.micronaut.http.annotation.Body;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.exceptions.HttpStatusException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.Map;
-
+@Tag(name = "Auth")
 @Controller("/auth")
 public class AuthController {
 

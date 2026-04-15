@@ -6,11 +6,12 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 import io.micronaut.http.exceptions.HttpStatusException;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 
 import java.util.Optional;
-
+@Tag(name = "Agente")
 @Controller("/agentes")
 public class AgenteController {
 

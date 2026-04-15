@@ -56,7 +56,7 @@ datasources:
     db-type: postgres
     dialect: POSTGRES
     url: jdbc:postgresql://localhost:5432/carrental
-    username: postgres
+    username: lucas
     password: root
     driver-class-name: org.postgresql.Driver
 
