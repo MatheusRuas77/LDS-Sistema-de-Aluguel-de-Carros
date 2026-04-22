@@ -119,12 +119,6 @@ Authorization: Bearer <jwt>
 - `src/main/resources/views` -> paginas HTML (Thymeleaf)
 - `src/main/resources/application.yml` -> configuracao da aplicacao
 
-## 🚀 Melhorias recomendadas
-
-- Padronizar tratamento global de excecoes para todas as rotas
-- Aumentar cobertura de testes automatizados
-- Ajustar politicas de acesso no `intercept-url-map` conforme os perfis
-- Externalizar secrets e credenciais por ambiente
 
 ## 👥 Participantes
 
