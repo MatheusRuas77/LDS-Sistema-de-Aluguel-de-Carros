@@ -446,6 +446,7 @@ tbody td { padding: 13px 16px; font-size: 14px; color: var(--ink-2); }
           <thead>
             <tr>
               <th>#</th>
+              <th></th>
               <th>Marca / Modelo</th>
               <th>Ano</th>
               <th>Placa</th>
@@ -455,7 +456,7 @@ tbody td { padding: 13px 16px; font-size: 14px; color: var(--ink-2); }
             </tr>
           </thead>
           <tbody id="tbody-automoveis">
-            <tr><td colspan="7" class="loading"><span class="spinner"></span> Carregando...</td></tr>
+            <tr><td colspan="8" class="loading"><span class="spinner"></span> Carregando...</td></tr>
           </tbody>
         </table>
       </div>
@@ -711,6 +712,11 @@ async function loadAutomoveis() {
 
     tbody.innerHTML = currentAutomoveis.map(a => `<tr>
         <td class="td-main">#${a.id}</td>
+        <td style="width:72px;padding:6px;">
+          ${a.fotoPrincipal
+            ? `<img src="${a.fotoPrincipal}" alt="${a.marca}" style="width:64px;height:44px;object-fit:cover;border-radius:6px;display:block;">`
+            : `<div style="width:64px;height:44px;background:var(--surface-2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:20px;">🚗</div>`}
+        </td>
         <td>${a.marca} ${a.modelo}</td>
         <td>${a.ano}</td>
         <td>${a.placa}</td>
@@ -763,6 +769,9 @@ async function abrirNovoPedido(automovelPreSelecionado) {
             return `
             <label class="vehicle-option ${selected}" id="vo-${a.id}">
                 <input type="checkbox" value="${a.id}" ${checked} onchange="toggleVehicle(${a.id})">
+                ${a.fotoPrincipal
+                  ? `<img src="${a.fotoPrincipal}" alt="${a.marca}" style="width:56px;height:40px;object-fit:cover;border-radius:6px;flex-shrink:0;">`
+                  : `<div style="width:56px;height:40px;background:var(--surface-2);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;">🚗</div>`}
                 <span>
                     <strong>${a.marca} ${a.modelo}</strong>
                     <span style="color:var(--ink-3);font-size:12px;display:block">${a.placa} · ${a.ano} · ${a.valorDiaria ? ('R$ ' + Number(a.valorDiaria).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + '/dia') : 'Diária não informada'}</span>

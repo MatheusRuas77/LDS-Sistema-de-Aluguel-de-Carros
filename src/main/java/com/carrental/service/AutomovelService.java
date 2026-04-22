@@ -48,6 +48,7 @@ public class AutomovelService {
             throw new IllegalArgumentException("Valor da diária deve ser maior que zero");
         }
         existente.setValorDiaria(updated.getValorDiaria());
+        if (updated.getFotoPrincipal() != null) existente.setFotoPrincipal(updated.getFotoPrincipal());
         if (updated.getProprietario() != null) existente.setProprietario(updated.getProprietario());
 
         return repository.update(existente);

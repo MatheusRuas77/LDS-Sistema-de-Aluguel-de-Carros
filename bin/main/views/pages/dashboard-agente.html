@@ -562,6 +562,48 @@ tbody td {
   background: var(--white);
   color: var(--ink);
 }
+
+.dropzone {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  background: var(--surface-2);
+  position: relative;
+}
+.dropzone.drag-over {
+  border-color: var(--accent);
+  background: rgba(20, 56, 255, 0.04);
+}
+.dropzone-icon { font-size: 28px; margin-bottom: 6px; }
+.dropzone-label { font-size: 13px; color: var(--ink-2); }
+.dropzone-label span { color: var(--accent); font-weight: 600; cursor: pointer; }
+.dropzone input[type="file"] { display: none; }
+.dropzone-preview {
+  display: none;
+  position: relative;
+  width: 100%;
+}
+.dropzone-preview img {
+  width: 100%;
+  max-height: 160px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+.dropzone-preview-remove {
+  position: absolute;
+  top: 6px; right: 6px;
+  background: rgba(0,0,0,0.55);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 24px; height: 24px;
+  cursor: pointer;
+  font-size: 13px;
+  display: flex; align-items: center; justify-content: center;
+}
 </style>
 </head>
 <body>
@@ -681,6 +723,23 @@ tbody td {
           <div class="field"><label>Placa</label><input id="auto-placa" placeholder="ex: ABC-1234"></div>
           <div class="field"><label>Matrícula</label><input id="auto-matricula" placeholder="ex: MAT001"></div>
           <div class="field"><label>Diária (R$)</label><input id="auto-valor-diaria" type="number" min="0.01" step="0.01" placeholder="ex: 149.90"></div>
+        </div>
+        <div class="field form-full" style="margin-top:12px;">
+          <label>Foto do Veículo</label>
+          <div class="dropzone" id="auto-dropzone" onclick="document.getElementById('auto-foto-input').click()"
+               ondragover="dzDragOver(event,'auto-dropzone')" ondragleave="dzDragLeave('auto-dropzone')" ondrop="dzDrop(event,'auto-dropzone','auto-foto-preview','auto-foto-input')">
+            <input type="file" id="auto-foto-input" accept="image/*"
+                   onchange="dzFileChange(this,'auto-dropzone','auto-foto-preview')">
+            <div id="auto-foto-empty">
+              <div class="dropzone-icon">🖼️</div>
+              <div class="dropzone-label">Arraste uma imagem aqui ou <span>selecione do computador</span></div>
+              <div class="dropzone-label" style="margin-top:4px;font-size:11px;">PNG, JPG, WEBP — máx. 5 MB</div>
+            </div>
+            <div class="dropzone-preview" id="auto-foto-preview">
+              <img id="auto-foto-preview-img" src="" alt="preview">
+              <button class="dropzone-preview-remove" onclick="dzRemove(event,'auto-dropzone','auto-foto-preview','auto-foto-input')">✕</button>
+            </div>
+          </div>
         </div>
         <div style="margin-top:16px; display:flex; justify-content:flex-end;">
           <button class="btn btn-primary" onclick="cadastrarAutomovel()">＋ Cadastrar</button>
@@ -945,8 +1004,23 @@ function abrirAvaliar(id) {
   const inicio = pedidoAtual.dataInicio ? new Date(pedidoAtual.dataInicio).toLocaleDateString('pt-BR') : '–';
   const fim = pedidoAtual.dataFim ? new Date(pedidoAtual.dataFim).toLocaleDateString('pt-BR') : '–';
   const valor = pedidoAtual.valorTotal ? 'R$ ' + Number(pedidoAtual.valorTotal).toLocaleString('pt-BR', {minimumFractionDigits:2}) : '–';
+  const autos = Array.isArray(pedidoAtual.automoveis) ? pedidoAtual.automoveis : [];
+  const carrosHtml = autos.length ? autos.map(a => `
+    <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--surface-2);">
+      ${a.fotoPrincipal
+        ? `<img src="${a.fotoPrincipal}" alt="${a.marca}" style="width:72px;height:52px;object-fit:cover;border-radius:8px;flex-shrink:0;">`
+        : `<div style="width:72px;height:52px;background:var(--surface-2);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">🚗</div>`}
+      <div>
+        <div style="font-weight:700;color:var(--ink);font-size:14px;">${a.marca} ${a.modelo}</div>
+        <div style="font-size:12px;color:var(--ink-3);margin-top:2px;">${a.placa} · ${a.ano}${a.valorDiaria ? ' · R$ ' + Number(a.valorDiaria).toLocaleString('pt-BR', {minimumFractionDigits:2}) + '/dia' : ''}</div>
+      </div>
+    </div>`).join('') : `<div style="padding:10px 0;border-bottom:1px solid var(--surface-2);color:var(--ink-3);font-size:13px;">Nenhum veículo vinculado</div>`;
   document.getElementById('modal-pedido-body').innerHTML = `
-    <div style="display:grid;gap:10px;font-size:14px;color:var(--ink-2);">
+    <div style="display:grid;gap:0;font-size:14px;color:var(--ink-2);">
+      <div style="padding:6px 0 10px;border-bottom:1px solid var(--surface-2);margin-bottom:4px;">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;">Veículo(s)</div>
+        ${carrosHtml}
+      </div>
       <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--surface-2);">
         <span style="color:var(--ink-3)">Pedido</span><strong>#${pedidoAtual.id}</strong>
       </div>
@@ -997,6 +1071,57 @@ async function loadAutomoveis() {
   </tr>`).join('');
 }
 
+function dzDragOver(e, zoneId) {
+  e.preventDefault();
+  document.getElementById(zoneId).classList.add('drag-over');
+}
+function dzDragLeave(zoneId) {
+  document.getElementById(zoneId).classList.remove('drag-over');
+}
+function dzDrop(e, zoneId, previewId, inputId) {
+  e.preventDefault();
+  dzDragLeave(zoneId);
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('image/')) {
+    const dt = new DataTransfer();
+    dt.items.add(file);
+    document.getElementById(inputId).files = dt.files;
+    dzShowPreview(file, previewId);
+  }
+}
+function dzFileChange(input, zoneId, previewId) {
+  if (input.files && input.files[0]) dzShowPreview(input.files[0], previewId);
+}
+function dzShowPreview(file, previewId) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const preview = document.getElementById(previewId);
+    preview.querySelector('img').src = e.target.result;
+    preview.style.display = 'block';
+    const empty = preview.closest('.dropzone').querySelector('[id$="-empty"]');
+    if (empty) empty.style.display = 'none';
+  };
+  reader.readAsDataURL(file);
+}
+function dzRemove(e, zoneId, previewId, inputId) {
+  e.stopPropagation();
+  const preview = document.getElementById(previewId);
+  preview.style.display = 'none';
+  preview.querySelector('img').src = '';
+  document.getElementById(inputId).value = '';
+  const empty = preview.closest('.dropzone').querySelector('[id$="-empty"]');
+  if (empty) empty.style.display = 'block';
+}
+function dzGetBase64(inputId) {
+  return new Promise(resolve => {
+    const file = document.getElementById(inputId).files[0];
+    if (!file) { resolve(null); return; }
+    const reader = new FileReader();
+    reader.onload = e => resolve(e.target.result);
+    reader.readAsDataURL(file);
+  });
+}
+
 async function cadastrarAutomovel() {
   const body = {
     marca: document.getElementById('auto-marca').value,
@@ -1009,10 +1134,13 @@ async function cadastrarAutomovel() {
   if (!body.marca || !body.modelo || !body.ano || !body.placa || !body.matricula || !body.valorDiaria || body.valorDiaria <= 0) {
     toast('Preencha todos os campos.', 'error'); return;
   }
+  const foto = await dzGetBase64('auto-foto-input');
+  if (foto) body.fotoPrincipal = foto;
   const res = await api('POST', '/automovel', body);
   if (res) {
     toast('✓ Automóvel cadastrado!');
     ['auto-marca','auto-modelo','auto-ano','auto-placa','auto-matricula','auto-valor-diaria'].forEach(id => document.getElementById(id).value = '');
+    dzRemove({ stopPropagation: () => {} }, 'auto-dropzone', 'auto-foto-preview', 'auto-foto-input');
     loadAutomoveis();
   } else { toast('Erro ao cadastrar.', 'error'); }
 }

@@ -46,6 +46,9 @@ public class Automovel {
     @Column(name = "valor_diaria", precision = 15, scale = 2)
     private BigDecimal valorDiaria;
 
+    @Column(name = "foto_principal", columnDefinition = "TEXT")
+    private String fotoPrincipal;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "proprietario_id")
