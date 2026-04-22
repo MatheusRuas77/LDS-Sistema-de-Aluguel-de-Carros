@@ -15,6 +15,8 @@ repositories {
 }
 
 dependencies {
+    compileOnly("io.micronaut:micronaut-core-processor")
+    testCompileOnly("io.micronaut:micronaut-core-processor")
     annotationProcessor("org.projectlombok:lombok")
     annotationProcessor("io.micronaut.data:micronaut-data-processor")
     annotationProcessor("io.micronaut:micronaut-http-validation")

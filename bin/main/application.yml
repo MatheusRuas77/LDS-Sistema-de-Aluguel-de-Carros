@@ -16,6 +16,9 @@ micronaut:
       swagger-ui:
         paths: classpath:META-INF/swagger/views/swagger-ui
         mapping: /swagger-ui/**
+      images:
+        paths: classpath:static/images
+        mapping: /images/**
   security:
     enabled: true
     authentication: bearer
@@ -50,6 +53,10 @@ micronaut:
           - isAnonymous()
 
       - pattern: /swagger-ui/**
+        access:
+          - isAnonymous()
+
+      - pattern: /images/**
         access:
           - isAnonymous()
 

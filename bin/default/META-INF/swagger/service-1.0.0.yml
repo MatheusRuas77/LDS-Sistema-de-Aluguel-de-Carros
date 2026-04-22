@@ -1,0 +1,619 @@
+openapi: 3.0.1
+info:
+  title: Service
+  version: 1.0.0
+paths:
+  /agentes:
+    get:
+      tags:
+      - Agente
+      operationId: findAll
+      responses:
+        "200":
+          description: findAll 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Agente"
+    post:
+      tags:
+      - Agente
+      operationId: create
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Agente"
+        required: true
+      responses:
+        "200":
+          description: create 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agente"
+  /agentes/{id}:
+    get:
+      tags:
+      - Agente
+      operationId: findById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: findById 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agente"
+    put:
+      tags:
+      - Agente
+      operationId: update
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Agente"
+        required: true
+      responses:
+        "200":
+          description: update 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agente"
+    delete:
+      tags:
+      - Agente
+      operationId: delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "204":
+          description: delete 204 response
+  /auth/dashboard-agente:
+    get:
+      tags:
+      - AuthPage
+      operationId: dashboardAgentePage
+      responses:
+        "200":
+          description: dashboardAgentePage 200 response
+          content:
+            text/html:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+  /auth/login:
+    get:
+      tags:
+      - AuthPage
+      operationId: loginPage
+      responses:
+        "200":
+          description: loginPage 200 response
+          content:
+            text/html:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+  /auth/login/agente:
+    post:
+      tags:
+      - Auth
+      operationId: loginAgente
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        "200":
+          description: loginAgente 200 response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+  /auth/login/cliente:
+    post:
+      tags:
+      - Auth
+      operationId: loginCliente
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        "200":
+          description: loginCliente 200 response
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+  /automovel:
+    get:
+      tags:
+      - Automovel
+      operationId: findAll_1
+      responses:
+        "200":
+          description: findAll_1 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Automovel"
+    post:
+      tags:
+      - Automovel
+      operationId: create_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Automovel"
+        required: true
+      responses:
+        "200":
+          description: create_1 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Automovel"
+  /automovel/{id}:
+    get:
+      tags:
+      - Automovel
+      operationId: findById_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: findById_1 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Automovel"
+    put:
+      tags:
+      - Automovel
+      operationId: update_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Automovel"
+        required: true
+      responses:
+        "200":
+          description: update_1 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Automovel"
+    delete:
+      tags:
+      - Automovel
+      operationId: delete_1
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: delete_1 200 response
+          content:
+            application/json:
+              schema:
+                type: object
+  /clientes:
+    get:
+      tags:
+      - Cliente
+      operationId: findAll_2
+      responses:
+        "200":
+          description: findAll_2 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Cliente"
+    post:
+      tags:
+      - Cliente
+      operationId: create_2
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Cliente"
+        required: true
+      responses:
+        "200":
+          description: create_2 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+  /clientes/{id}:
+    get:
+      tags:
+      - Cliente
+      operationId: findById_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: findById_2 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+    put:
+      tags:
+      - Cliente
+      operationId: update_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Cliente"
+        required: true
+      responses:
+        "200":
+          description: update_2 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Cliente"
+    delete:
+      tags:
+      - Cliente
+      operationId: delete_2
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      responses:
+        "200":
+          description: delete_2 200 response
+          content:
+            application/json:
+              schema:
+                type: object
+  /pages/dashboard-agente:
+    get:
+      tags:
+      - Pages
+      operationId: dashboardAgente
+      responses:
+        "200":
+          description: dashboardAgente 200 response
+          content:
+            text/html:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+  /pages/dashboard-cliente:
+    get:
+      tags:
+      - Pages
+      operationId: dashboardCliente
+      responses:
+        "200":
+          description: dashboardCliente 200 response
+          content:
+            text/html:
+              schema:
+                type: object
+                additionalProperties:
+                  type: object
+  /pedido:
+    get:
+      tags:
+      - Pedido
+      operationId: findPedidos
+      parameters:
+      - name: clienteId
+        in: query
+        explode: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      responses:
+        "200":
+          description: findPedidos 200 response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Pedido"
+    post:
+      tags:
+      - Pedido
+      operationId: create_3
+      parameters:
+      - name: clienteId
+        in: query
+        required: true
+        explode: false
+        schema:
+          type: integer
+          format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PedidoRequest"
+        required: true
+      responses:
+        "200":
+          description: create_3 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pedido"
+  /pedido/{id}/status:
+    put:
+      tags:
+      - Pedido
+      operationId: atualizarStatus
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: agenteId
+        in: query
+        explode: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        "200":
+          description: atualizarStatus 200 response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pedido"
+components:
+  schemas:
+    Agente:
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/Usuario"
+      - type: object
+        properties:
+          role:
+            $ref: "#/components/schemas/AgenteRoleEnum"
+    AgenteRoleEnum:
+      type: string
+      enum:
+      - EMPRESA
+      - BANCO
+    Automovel:
+      required:
+      - marca
+      - matricula
+      - modelo
+      - placa
+      type: object
+      properties:
+        ano:
+          minimum: 0
+          exclusiveMinimum: true
+          type: integer
+          format: int32
+        id:
+          type: integer
+          format: int64
+          nullable: true
+        marca:
+          minLength: 1
+          type: string
+        matricula:
+          minLength: 1
+          type: string
+        modelo:
+          minLength: 1
+          type: string
+        placa:
+          minLength: 1
+          type: string
+        valorDiaria:
+          minimum: 0
+          exclusiveMinimum: true
+          type: number
+    Cliente:
+      type: object
+      allOf:
+      - $ref: "#/components/schemas/Usuario"
+      - type: object
+        properties:
+          cpf:
+            type: string
+          profissao:
+            type: string
+          rendimentos:
+            maxItems: 3
+            type: array
+            writeOnly: true
+            items:
+              $ref: "#/components/schemas/Rendimento"
+            x-size-message: A user can have at most 3 jobs
+          rg:
+            type: string
+    Pedido:
+      type: object
+      properties:
+        automoveis:
+          type: array
+          items:
+            $ref: "#/components/schemas/Automovel"
+        dataCriacao:
+          type: string
+          format: date-time
+        dataFim:
+          type: string
+          format: date-time
+        dataInicio:
+          type: string
+          format: date-time
+        id:
+          type: integer
+          format: int64
+          nullable: true
+        status:
+          $ref: "#/components/schemas/StatusPedidoEnum"
+        valorTotal:
+          type: number
+        clienteNome:
+          type: string
+        clienteId:
+          type: integer
+          format: int64
+    PedidoRequest:
+      type: object
+      properties:
+        dataInicio:
+          type: string
+          format: date-time
+        dataFim:
+          type: string
+          format: date-time
+        automovelIds:
+          type: array
+          items:
+            type: integer
+            format: int64
+    Rendimento:
+      type: object
+      properties:
+        cliente:
+          nullable: true
+          allOf:
+          - $ref: "#/components/schemas/Cliente"
+        dataFim:
+          type: string
+          format: date-time
+        dataInicio:
+          type: string
+          format: date-time
+        id:
+          type: integer
+          format: int64
+          nullable: true
+        valorMensal:
+          minimum: 0
+          exclusiveMinimum: true
+          type: number
+    StatusPedidoEnum:
+      type: string
+      enum:
+      - PENDENTE
+      - APROVADO
+      - REJEITADO
+      - CANCELADO
+    Usuario:
+      required:
+      - login
+      - nome
+      - senha
+      type: object
+      properties:
+        endereco:
+          type: string
+        id:
+          type: integer
+          format: int64
+          nullable: true
+        login:
+          minLength: 1
+          type: string
+        nome:
+          minLength: 1
+          type: string
+        senha:
+          minLength: 1
+          type: string
+          writeOnly: true
