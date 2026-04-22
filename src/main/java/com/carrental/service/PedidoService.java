@@ -12,6 +12,9 @@ import jakarta.inject.Singleton;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +56,9 @@ public class PedidoService {
                 throw new IllegalArgumentException("Um ou mais automóveis não existem");
             }
             for (Automovel a : automoveis) {
+                if (a.getValorDiaria() == null || a.getValorDiaria().signum() <= 0) {
+                    throw new IllegalArgumentException("Automóvel ID " + a.getId() + " está sem valor de diária válido");
+                }
                 long conflitos = pedidoRepository.countAlugueisConflitantes(
                         a.getId(),
                         pedido.getDataInicio(),
@@ -65,6 +71,18 @@ public class PedidoService {
                 }
             }
             pedido.setAutomoveis(automoveis);
+
+            BigDecimal somaDiarias = automoveis.stream()
+                    .map(Automovel::getValorDiaria)
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            long minutos = Math.max(1, Duration.between(pedido.getDataInicio(), pedido.getDataFim()).toMinutes());
+            long diariasCobradas = Math.max(1, (long) Math.ceil(minutos / (24d * 60d)));
+
+            BigDecimal valorTotal = somaDiarias
+                    .multiply(BigDecimal.valueOf(diariasCobradas))
+                    .setScale(2, RoundingMode.HALF_UP);
+            pedido.setValorTotal(valorTotal);
         }
         return pedidoRepository.save(pedido);
     }

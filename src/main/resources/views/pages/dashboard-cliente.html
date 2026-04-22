@@ -453,11 +453,12 @@ tbody td { padding: 13px 16px; font-size: 14px; color: var(--ink-2); }
               <th>Ano</th>
               <th>Placa</th>
               <th>Matrícula</th>
+              <th>Diária</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody id="tbody-automoveis">
-            <tr><td colspan="6" class="loading"><span class="spinner"></span> Carregando...</td></tr>
+            <tr><td colspan="7" class="loading"><span class="spinner"></span> Carregando...</td></tr>
           </tbody>
         </table>
       </div>
@@ -700,14 +701,14 @@ async function cancelarPedido(id) {
 // ── AUTOMÓVEIS ──
 async function loadAutomoveis() {
     document.getElementById('tbody-automoveis').innerHTML =
-        `<tr><td colspan="6" class="loading"><span class="spinner"></span> Carregando...</td></tr>`;
+        `<tr><td colspan="7" class="loading"><span class="spinner"></span> Carregando...</td></tr>`;
 
     const data = await api('GET', '/automovel');
     currentAutomoveis = Array.isArray(data) ? data : [];
 
     const tbody = document.getElementById('tbody-automoveis');
     if (!currentAutomoveis.length) {
-        tbody.innerHTML = `<tr><td colspan="6" class="empty"><div class="empty-icon">🚙</div>Nenhum automóvel disponível.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="empty"><div class="empty-icon">🚙</div>Nenhum automóvel disponível.</td></tr>`;
         return;
     }
 
@@ -717,6 +718,7 @@ async function loadAutomoveis() {
         <td>${a.ano}</td>
         <td>${a.placa}</td>
         <td>${a.matricula}</td>
+        <td>${a.valorDiaria ? 'R$ ' + Number(a.valorDiaria).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '–'}</td>
         <td><button class="btn btn-sm btn-primary" onclick="abrirNovoPedido(${a.id})">＋ Solicitar</button></td>
     </tr>`).join('');
 }
@@ -766,7 +768,7 @@ async function abrirNovoPedido(automovelPreSelecionado) {
                 <input type="checkbox" value="${a.id}" ${checked} onchange="toggleVehicle(${a.id})">
                 <span>
                     <strong>${a.marca} ${a.modelo}</strong>
-                    <span style="color:var(--ink-3);font-size:12px;display:block">${a.placa} · ${a.ano}</span>
+                    <span style="color:var(--ink-3);font-size:12px;display:block">${a.placa} · ${a.ano} · ${a.valorDiaria ? ('R$ ' + Number(a.valorDiaria).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + '/dia') : 'Diária não informada'}</span>
                 </span>
             </label>`;
         }).join('');

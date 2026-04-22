@@ -683,6 +683,7 @@ tbody td {
           <div class="field"><label>Ano</label><input id="auto-ano" type="number" placeholder="ex: 2022"></div>
           <div class="field"><label>Placa</label><input id="auto-placa" placeholder="ex: ABC-1234"></div>
           <div class="field"><label>Matrícula</label><input id="auto-matricula" placeholder="ex: MAT001"></div>
+          <div class="field"><label>Diária (R$)</label><input id="auto-valor-diaria" type="number" min="0.01" step="0.01" placeholder="ex: 149.90"></div>
         </div>
         <div style="margin-top:16px; display:flex; justify-content:flex-end;">
           <button class="btn btn-primary" onclick="cadastrarAutomovel()">＋ Cadastrar</button>
@@ -694,10 +695,10 @@ tbody td {
       <div class="table-wrap">
         <table>
           <thead>
-            <tr><th>#</th><th>Marca / Modelo</th><th>Ano</th><th>Placa</th><th>Matrícula</th><th>Ações</th></tr>
+            <tr><th>#</th><th>Marca / Modelo</th><th>Ano</th><th>Placa</th><th>Matrícula</th><th>Diária</th><th>Ações</th></tr>
           </thead>
           <tbody id="tbody-automoveis">
-            <tr><td colspan="6" class="loading"><span class="spinner"></span> Carregando...</td></tr>
+            <tr><td colspan="7" class="loading"><span class="spinner"></span> Carregando...</td></tr>
           </tbody>
         </table>
       </div>
@@ -768,7 +769,8 @@ tbody td {
       <div class="field"><label>Modelo</label><input id="edit-modelo"></div>
       <div class="field"><label>Ano</label><input id="edit-ano" type="number"></div>
       <div class="field"><label>Placa</label><input id="edit-placa"></div>
-      <div class="field form-full"><label>Matrícula</label><input id="edit-matricula"></div>
+      <div class="field"><label>Matrícula</label><input id="edit-matricula"></div>
+      <div class="field"><label>Diária (R$)</label><input id="edit-valor-diaria" type="number" min="0.01" step="0.01"></div>
     </div>
     <input type="hidden" id="edit-auto-id">
     <div class="modal-actions">
@@ -796,6 +798,16 @@ let pedidoAtual = null;
 
 // ── AUTH CHECK ──
 if (!token) { window.location.href = '/auth/login'; }
+
+// ── DECODE JWT ──
+function parseJwt(t) {
+  try {
+    const b64 = t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(atob(b64));
+  } catch (e) { return {}; }
+}
+const claims = parseJwt(token);
+const agenteId = claims.id;
 
 function headers() {
   return {
@@ -863,21 +875,18 @@ function navigate(page) {
 
 // ── LOAD USER ──
 async function loadUserInfo() {
-  const nome = localStorage.getItem('tipoUsuario') || 'Agente';
-  // tentar pegar dados do agente logado
-  const agentes = await api('GET', '/agentes');
-  if (agentes && agentes.length > 0) {
-    // tenta identificar o agente pelo token (pega o primeiro por ora)
-    const nomeExibido = agentes[0].nome || 'Agente';
-    document.getElementById('sidebar-username').textContent = nomeExibido;
-    document.getElementById('avatar-initials').textContent = nomeExibido.slice(0, 2).toUpperCase();
+  if (!agenteId) return;
+  const agente = await api('GET', '/agentes/' + agenteId);
+  if (agente && agente.nome) {
+    document.getElementById('sidebar-username').textContent = agente.nome;
+    document.getElementById('avatar-initials').textContent = agente.nome.slice(0, 2).toUpperCase();
   }
 }
 
 // ── PEDIDOS ──
 async function loadPedidos() {
-  const data = await api('GET', '/pedidos');
-  currentPedidos = data || [];
+  const data = await api('GET', '/pedido');
+  currentPedidos = Array.isArray(data) ? data : [];
 
   const pendentes = currentPedidos.filter(p => p.status === 'PENDENTE').length;
   const aprovados = currentPedidos.filter(p => p.status === 'APROVADO').length;
@@ -913,7 +922,7 @@ function renderPedidos() {
       : `<span style="color:var(--ink-3);font-size:13px;">–</span>`;
     return `<tr>
       <td class="td-main">#${p.id}</td>
-      <td>${p.clienteId || p.cliente?.nome || '–'}</td>
+      <td>${p.clienteNome || '–'}</td>
       <td>${criado}</td>
       <td>${inicio} → ${fim}</td>
       <td>${valor}</td>
@@ -959,8 +968,7 @@ function abrirAvaliar(id) {
 
 async function avaliarPedido(novoStatus) {
   if (!pedidoAtual) return;
-  const updated = { ...pedidoAtual, status: novoStatus, agenteResponsavelId: pedidoAtual.agenteResponsavelId };
-  const res = await api('PUT', '/pedidos/' + pedidoAtual.id, { ...pedidoAtual, status: novoStatus });
+  const res = await api('PUT', '/pedido/' + pedidoAtual.id + '/status?agenteId=' + agenteId, { status: novoStatus });
   if (res !== null) {
     toast(novoStatus === 'APROVADO' ? '✓ Pedido aprovado!' : '✗ Pedido rejeitado.', novoStatus === 'APROVADO' ? 'ok' : 'error');
     closeModal('modal-pedido');
@@ -975,7 +983,7 @@ async function loadAutomoveis() {
   const data = await api('GET', '/automovel');
   const tbody = document.getElementById('tbody-automoveis');
   if (!data || !data.length) {
-    tbody.innerHTML = `<tr><td colspan="6" class="empty"><div class="empty-icon">🚙</div>Nenhum automóvel cadastrado.</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="7" class="empty"><div class="empty-icon">🚙</div>Nenhum automóvel cadastrado.</td></tr>`;
     return;
   }
   tbody.innerHTML = data.map(a => `<tr>
@@ -984,6 +992,7 @@ async function loadAutomoveis() {
     <td>${a.ano}</td>
     <td>${a.placa}</td>
     <td>${a.matricula}</td>
+    <td>${a.valorDiaria ? 'R$ ' + Number(a.valorDiaria).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '–'}</td>
     <td><div class="actions-cell">
       <button class="btn btn-sm btn-ghost" onclick="editarAutomovel(${JSON.stringify(a).replace(/"/g,'&quot;')})">✎ Editar</button>
       <button class="btn btn-sm btn-danger" onclick="deletarAutomovel(${a.id})">✕</button>
@@ -997,15 +1006,16 @@ async function cadastrarAutomovel() {
     modelo: document.getElementById('auto-modelo').value,
     ano: parseInt(document.getElementById('auto-ano').value),
     placa: document.getElementById('auto-placa').value,
-    matricula: document.getElementById('auto-matricula').value
+    matricula: document.getElementById('auto-matricula').value,
+    valorDiaria: parseFloat(document.getElementById('auto-valor-diaria').value)
   };
-  if (!body.marca || !body.modelo || !body.ano || !body.placa || !body.matricula) {
+  if (!body.marca || !body.modelo || !body.ano || !body.placa || !body.matricula || !body.valorDiaria || body.valorDiaria <= 0) {
     toast('Preencha todos os campos.', 'error'); return;
   }
   const res = await api('POST', '/automovel', body);
   if (res) {
     toast('✓ Automóvel cadastrado!');
-    ['auto-marca','auto-modelo','auto-ano','auto-placa','auto-matricula'].forEach(id => document.getElementById(id).value = '');
+    ['auto-marca','auto-modelo','auto-ano','auto-placa','auto-matricula','auto-valor-diaria'].forEach(id => document.getElementById(id).value = '');
     loadAutomoveis();
   } else { toast('Erro ao cadastrar.', 'error'); }
 }
@@ -1017,6 +1027,7 @@ function editarAutomovel(a) {
   document.getElementById('edit-ano').value = a.ano;
   document.getElementById('edit-placa').value = a.placa;
   document.getElementById('edit-matricula').value = a.matricula;
+  document.getElementById('edit-valor-diaria').value = a.valorDiaria || '';
   openModal('modal-automovel');
 }
 
@@ -1027,8 +1038,13 @@ async function salvarAutomovel() {
     modelo: document.getElementById('edit-modelo').value,
     ano: parseInt(document.getElementById('edit-ano').value),
     placa: document.getElementById('edit-placa').value,
-    matricula: document.getElementById('edit-matricula').value
+    matricula: document.getElementById('edit-matricula').value,
+    valorDiaria: parseFloat(document.getElementById('edit-valor-diaria').value)
   };
+  if (!body.valorDiaria || body.valorDiaria <= 0) {
+    toast('Informe uma diária válida.', 'error');
+    return;
+  }
   const res = await api('PUT', '/automovel/' + id, body);
   if (res !== null) {
     toast('✓ Automóvel atualizado!');

@@ -20,6 +20,9 @@ public class AutomovelService {
 
     @Transactional
     public Automovel create(@Valid Automovel automovel) {
+        if (automovel.getValorDiaria() == null || automovel.getValorDiaria().signum() <= 0) {
+            throw new IllegalArgumentException("Valor da diária deve ser maior que zero");
+        }
         return repository.save(automovel);
     }
 
@@ -41,6 +44,10 @@ public class AutomovelService {
         existente.setModelo(updated.getModelo());
         existente.setPlaca(updated.getPlaca());
         existente.setMarca(updated.getMarca());
+        if (updated.getValorDiaria() == null || updated.getValorDiaria().signum() <= 0) {
+            throw new IllegalArgumentException("Valor da diária deve ser maior que zero");
+        }
+        existente.setValorDiaria(updated.getValorDiaria());
         if (updated.getProprietario() != null) existente.setProprietario(updated.getProprietario());
 
         return repository.update(existente);

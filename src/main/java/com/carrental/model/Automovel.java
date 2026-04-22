@@ -7,6 +7,8 @@ import jakarta.validation.constraints.Positive;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Table(name = "automoveis")
 @Serdeable
@@ -39,6 +41,10 @@ public class Automovel {
     @NotBlank
     @Column(nullable = false, length = 100)
     private String marca;
+
+    @Positive
+    @Column(name = "valor_diaria", precision = 15, scale = 2)
+    private BigDecimal valorDiaria;
 
     @JsonIgnore
     @ManyToOne

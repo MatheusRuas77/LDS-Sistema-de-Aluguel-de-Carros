@@ -453,11 +453,12 @@ tbody td { padding: 13px 16px; font-size: 14px; color: var(--ink-2); }
               <th>Ano</th>
               <th>Placa</th>
               <th>Matrícula</th>
+              <th>Diária</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody id="tbody-automoveis">
-            <tr><td colspan="6" class="loading"><span class="spinner"></span> Carregando...</td></tr>
+            <tr><td colspan="7" class="loading"><span class="spinner"></span> Carregando...</td></tr>
           </tbody>
         </table>
       </div>
@@ -512,14 +513,24 @@ tbody td { padding: 13px 16px; font-size: 14px; color: var(--ink-2); }
 <script>
 const API = 'http://localhost:8080';
 
+function getCookie(name) {
+    const prefix = name + '=';
+    return document.cookie
+        .split(';')
+        .map(v => v.trim())
+        .find(v => v.startsWith(prefix))
+        ?.slice(prefix.length) || null;
+}
+
 // ── AUTH SETUP ──
 const urlParams = new URLSearchParams(window.location.search);
 const tokenFromUrl = urlParams.get('token');
 if (tokenFromUrl) {
     localStorage.setItem('jwtToken', tokenFromUrl);
+    document.cookie = `jwtToken=${tokenFromUrl}; path=/; SameSite=Strict`;
     window.history.replaceState({}, document.title, '/pages/dashboard-cliente');
 }
-let token = tokenFromUrl || localStorage.getItem('jwtToken');
+let token = tokenFromUrl || localStorage.getItem('jwtToken') || getCookie('jwtToken');
 if (!token) { window.location.href = '/auth/login'; }
 
 // ── DECODE JWT PARA EXTRAIR clienteId ──
@@ -531,7 +542,9 @@ function parseJwt(t) {
 }
 const claims = parseJwt(token);
 const clienteId = claims.id;
-if (!clienteId) { window.location.href = '/auth/login'; }
+if (!clienteId || claims.tipoUsuario !== 'CLIENTE') {
+    logout();
+}
 
 let currentAutomoveis = [];
 
@@ -556,6 +569,16 @@ async function api(method, path, body) {
         const text = await res.text();
         return text ? JSON.parse(text) : {};
     } catch (e) { return null; }
+}
+
+function normalizeListResponse(data) {
+    if (Array.isArray(data)) return data;
+    if (Array.isArray(data?.content)) return data.content;
+    if (data && data._embedded && typeof data._embedded === 'object') {
+        const firstArray = Object.values(data._embedded).find(Array.isArray);
+        if (Array.isArray(firstArray)) return firstArray;
+    }
+    return [];
 }
 
 // ── TOAST ──
@@ -613,7 +636,16 @@ async function loadPedidos() {
         `<tr><td colspan="7" class="loading"><span class="spinner"></span> Carregando pedidos...</td></tr>`;
 
     const data = await api('GET', `/pedido?clienteId=${clienteId}`);
-    const lista = Array.isArray(data) ? data : [];
+    if (data === null) {
+        document.getElementById('tbody-pedidos').innerHTML = `<tr><td colspan="7" class="empty"><div class="empty-icon">⚠️</div>Falha ao carregar pedidos.</td></tr>`;
+        document.getElementById('stat-total').textContent = '0';
+        document.getElementById('stat-pendentes').textContent = '0';
+        document.getElementById('stat-aprovados').textContent = '0';
+        document.getElementById('stat-rejeitados').textContent = '0';
+        toast('Erro ao carregar pedidos.', 'error');
+        return;
+    }
+    const lista = normalizeListResponse(data);
 
     document.getElementById('stat-total').textContent      = lista.length;
     document.getElementById('stat-pendentes').textContent  = lista.filter(p => p.status === 'PENDENTE').length;
@@ -669,14 +701,14 @@ async function cancelarPedido(id) {
 // ── AUTOMÓVEIS ──
 async function loadAutomoveis() {
     document.getElementById('tbody-automoveis').innerHTML =
-        `<tr><td colspan="6" class="loading"><span class="spinner"></span> Carregando...</td></tr>`;
+        `<tr><td colspan="7" class="loading"><span class="spinner"></span> Carregando...</td></tr>`;
 
     const data = await api('GET', '/automovel');
     currentAutomoveis = Array.isArray(data) ? data : [];
 
     const tbody = document.getElementById('tbody-automoveis');
     if (!currentAutomoveis.length) {
-        tbody.innerHTML = `<tr><td colspan="6" class="empty"><div class="empty-icon">🚙</div>Nenhum automóvel disponível.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="7" class="empty"><div class="empty-icon">🚙</div>Nenhum automóvel disponível.</td></tr>`;
         return;
     }
 
@@ -686,6 +718,7 @@ async function loadAutomoveis() {
         <td>${a.ano}</td>
         <td>${a.placa}</td>
         <td>${a.matricula}</td>
+        <td>${a.valorDiaria ? 'R$ ' + Number(a.valorDiaria).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) : '–'}</td>
         <td><button class="btn btn-sm btn-primary" onclick="abrirNovoPedido(${a.id})">＋ Solicitar</button></td>
     </tr>`).join('');
 }
@@ -735,7 +768,7 @@ async function abrirNovoPedido(automovelPreSelecionado) {
                 <input type="checkbox" value="${a.id}" ${checked} onchange="toggleVehicle(${a.id})">
                 <span>
                     <strong>${a.marca} ${a.modelo}</strong>
-                    <span style="color:var(--ink-3);font-size:12px;display:block">${a.placa} · ${a.ano}</span>
+                    <span style="color:var(--ink-3);font-size:12px;display:block">${a.placa} · ${a.ano} · ${a.valorDiaria ? ('R$ ' + Number(a.valorDiaria).toLocaleString('pt-BR', { minimumFractionDigits: 2 }) + '/dia') : 'Diária não informada'}</span>
                 </span>
             </label>`;
         }).join('');

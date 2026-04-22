@@ -22,7 +22,11 @@ public class AutomovelController {
 
     @Post
     public HttpResponse<Automovel> create(@Body @Valid Automovel automovel) {
-        return HttpResponse.created(service.create(automovel));
+        try {
+            return HttpResponse.created(service.create(automovel));
+        } catch (IllegalArgumentException e) {
+            throw new HttpStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
+        }
     }
 
     @Get
@@ -42,7 +46,10 @@ public class AutomovelController {
         try {
             return HttpResponse.ok(service.update(id, updated));
         } catch (IllegalArgumentException e) {
-            return HttpResponse.notFound();
+            if (e.getMessage() != null && e.getMessage().contains("não encontrado")) {
+                return HttpResponse.notFound();
+            }
+            throw new HttpStatusException(HttpStatus.BAD_REQUEST, e.getMessage());
         }
     }
 
