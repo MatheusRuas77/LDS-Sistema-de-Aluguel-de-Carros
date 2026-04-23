@@ -1,0 +1,327 @@
+<svg width="1400" height="960" viewBox="0 0 1400 960"
+     xmlns="http://www.w3.org/2000/svg"
+     font-family="'Segoe UI', Arial, sans-serif" font-size="11">
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M1 1 L9 5 L1 9" fill="none" stroke="#333" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="arrd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M1 1 L9 5 L1 9" fill="none" stroke="#555" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <rect width="1400" height="960" fill="white"/>
+
+  <!-- TITLE -->
+  <text x="18" y="26" font-size="15" font-weight="700" fill="#111">Diagrama de Implantação — Sistema de Aluguel de Carros</text>
+  <text x="18" y="44" font-size="10" fill="#555">Micronaut Framework + PostgreSQL  |  JVM 21  |  Netty HTTP</text>
+
+  <!-- ═══ PACKAGE CLIENTS ═══ -->
+  <rect x="12" y="60" width="178" height="230" rx="2" fill="white" stroke="#333" stroke-width="1.5"/>
+  <rect x="12" y="60" width="65" height="16" rx="2" fill="white" stroke="#333" stroke-width="1.5"/>
+  <text x="17" y="72" font-size="9.5" fill="#333">Package</text>
+  <text x="101" y="86" font-size="13" font-weight="700" fill="#111" text-anchor="middle">Clients</text>
+
+  <!-- Cliente artifact -->
+  <rect x="27" y="94" width="148" height="74" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <polygon points="153,94 175,94 175,107 153,107" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="153" y1="94" x2="175" y2="107" stroke="#555" stroke-width="1"/>
+  <text x="101" y="111" font-size="8.5" fill="#444" text-anchor="middle">«artifact»</text>
+  <text x="101" y="125" font-size="11" font-weight="700" fill="#111" text-anchor="middle">Cliente</text>
+  <text x="101" y="140" font-size="9" fill="#555" text-anchor="middle">Navegador web / HTML</text>
+  <text x="101" y="154" font-size="8.5" fill="#777" text-anchor="middle">Usuário final</text>
+
+  <!-- Agente artifact -->
+  <rect x="27" y="180" width="148" height="74" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <polygon points="153,180 175,180 175,193 153,193" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="153" y1="180" x2="175" y2="193" stroke="#555" stroke-width="1"/>
+  <text x="101" y="197" font-size="8.5" fill="#444" text-anchor="middle">«artifact»</text>
+  <text x="101" y="211" font-size="11" font-weight="700" fill="#111" text-anchor="middle">Agente</text>
+  <text x="101" y="226" font-size="9" fill="#555" text-anchor="middle">Navegador web / HTML</text>
+  <text x="101" y="240" font-size="8.5" fill="#777" text-anchor="middle">Gestor de frotas</text>
+
+  <!-- ═══ PACKAGE SERVER ═══ -->
+  <rect x="206" y="60" width="1178" height="820" rx="2" fill="white" stroke="#333" stroke-width="1.5"/>
+  <rect x="206" y="60" width="65" height="16" rx="2" fill="white" stroke="#333" stroke-width="1.5"/>
+  <text x="211" y="72" font-size="9.5" fill="#333">Package</text>
+  <text x="795" y="86" font-size="13" font-weight="700" fill="#111" text-anchor="middle">Server</text>
+
+  <!-- ═══ NODE: App Server ═══ -->
+  <!-- 3D box: front face -->
+  <rect x="222" y="100" width="330" height="170" rx="2" fill="white" stroke="#555" stroke-width="1.5"/>
+  <!-- top face -->
+  <polygon points="222,100 238,84 568,84 552,100" fill="white" stroke="#555" stroke-width="1.2"/>
+  <!-- right face -->
+  <polygon points="552,100 568,84 568,270 552,270" fill="white" stroke="#555" stroke-width="1.2"/>
+  <text x="387" y="118" font-size="8.5" fill="#555" text-anchor="middle">«execution environment»</text>
+  <text x="387" y="134" font-size="13" font-weight="700" fill="#111" text-anchor="middle">App Server</text>
+  <text x="387" y="150" font-size="9.5" fill="#555" text-anchor="middle">JVM 21 · Micronaut · Netty</text>
+
+  <!-- carrental.jar -->
+  <rect x="232" y="162" width="148" height="88" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <polygon points="358,162 380,162 380,175 358,175" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="358" y1="162" x2="380" y2="175" stroke="#555" stroke-width="1"/>
+  <text x="306" y="179" font-size="8.5" fill="#444" text-anchor="middle">«artifact»</text>
+  <text x="306" y="194" font-size="11" font-weight="700" fill="#111" text-anchor="middle">carrental.jar</text>
+  <text x="306" y="209" font-size="9" fill="#555" text-anchor="middle">Gradle Shadow JAR</text>
+  <text x="306" y="224" font-size="8.5" fill="#777" text-anchor="middle">porta :8080</text>
+
+  <!-- application.yml -->
+  <rect x="396" y="162" width="148" height="88" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <polygon points="522,162 544,162 544,175 522,175" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="522" y1="162" x2="544" y2="175" stroke="#555" stroke-width="1"/>
+  <text x="470" y="179" font-size="8.5" fill="#444" text-anchor="middle">«artifact»</text>
+  <text x="470" y="194" font-size="11" font-weight="700" fill="#111" text-anchor="middle">application.yml</text>
+  <text x="470" y="209" font-size="9" fill="#555" text-anchor="middle">Config Micronaut</text>
+  <text x="470" y="224" font-size="8.5" fill="#777" text-anchor="middle">datasource · jwt · server</text>
+
+  <!-- ═══ NODE: DB Server — CILINDRO ═══ -->
+  <!-- Positioned at x=640..880, y=100..270, center x=760 -->
+  <rect x="640" y="130" width="240" height="140" fill="white" stroke="none"/>
+  <line x1="640" y1="130" x2="640" y2="270" stroke="#555" stroke-width="1.5"/>
+  <line x1="880" y1="130" x2="880" y2="270" stroke="#555" stroke-width="1.5"/>
+  <ellipse cx="760" cy="130" rx="120" ry="20" fill="white" stroke="#555" stroke-width="1.5"/>
+  <path d="M640,270 A120,20 0 0,0 880,270" fill="white" stroke="#555" stroke-width="1.5"/>
+  <path d="M640,270 A120,20 0 0,1 880,270" fill="white" stroke="#555" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="760" y="152" font-size="8.5" fill="#444" text-anchor="middle">«device»</text>
+  <text x="760" y="170" font-size="13" font-weight="700" fill="#111" text-anchor="middle">DB Server</text>
+  <text x="760" y="188" font-size="9.5" fill="#555" text-anchor="middle">PostgreSQL :5432</text>
+
+  <!-- carrental DB — inside cylinder -->
+  <rect x="648" y="198" width="130" height="62" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <polygon points="756,198 778,198 778,211 756,211" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="756" y1="198" x2="778" y2="211" stroke="#555" stroke-width="1"/>
+  <text x="713" y="215" font-size="8.5" fill="#444" text-anchor="middle">«artifact»</text>
+  <text x="713" y="229" font-size="10.5" font-weight="700" fill="#111" text-anchor="middle">carrental DB</text>
+  <text x="713" y="243" font-size="8.5" fill="#555" text-anchor="middle">hbm2ddl auto-update</text>
+  <text x="713" y="255" font-size="8" fill="#777" text-anchor="middle">schema: carrental</text>
+
+  <!-- Hikari Pool — inside cylinder -->
+  <rect x="790" y="198" width="82" height="62" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <polygon points="850,198 872,198 872,211 850,211" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="850" y1="198" x2="872" y2="211" stroke="#555" stroke-width="1"/>
+  <text x="831" y="215" font-size="8.5" fill="#444" text-anchor="middle">«artifact»</text>
+  <text x="831" y="229" font-size="10.5" font-weight="700" fill="#111" text-anchor="middle">Hikari Pool</text>
+  <text x="831" y="243" font-size="8.5" fill="#555" text-anchor="middle">micronaut-jdbc</text>
+  <text x="831" y="255" font-size="8" fill="#777" text-anchor="middle">pool-size: 10</text>
+
+  <!-- ═══ SUBSYSTEM: Tabelas ═══ -->
+  <rect x="1000" y="96" width="370" height="186" rx="2" fill="white" stroke="#555" stroke-width="1.2" stroke-dasharray="6,3"/>
+  <rect x="1000" y="96" width="100" height="16" rx="2" fill="white" stroke="#555" stroke-width="1.2" stroke-dasharray="6,3"/>
+  <text x="1005" y="108" font-size="8.5" fill="#444">«subsystem»</text>
+  <text x="1185" y="126" font-size="11" font-weight="700" fill="#111" text-anchor="middle">Tabelas (carrental DB)</text>
+
+  <!-- Row 1 of tables -->
+  <rect x="1014" y="140" width="90" height="28" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <text x="1059" y="158" font-size="9.5" fill="#111" text-anchor="middle">usuarios</text>
+
+  <rect x="1116" y="140" width="90" height="28" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <text x="1161" y="158" font-size="9.5" fill="#111" text-anchor="middle">pedidos</text>
+
+  <rect x="1218" y="140" width="136" height="28" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <text x="1286" y="158" font-size="9.5" fill="#111" text-anchor="middle">automoveis</text>
+
+  <!-- Row 2 of tables -->
+  <rect x="1014" y="182" width="90" height="28" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <text x="1059" y="200" font-size="9.5" fill="#111" text-anchor="middle">contratos</text>
+
+  <rect x="1116" y="182" width="110" height="28" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <text x="1171" y="200" font-size="9.5" fill="#111" text-anchor="middle">rendimentos</text>
+
+  <!-- ══════════════════════════════════════════
+       COMUNICAÇÕES — PARTE SUPERIOR
+  ══════════════════════════════════════════ -->
+
+  <!-- [1] Clients → App Server: REST / HTTPS :8080
+       Connector horizontal em y=175.
+       Socket (meia-lua abre à esquerda) encosta na borda direita do Package Clients (x=190).
+       Ball encosta na borda esquerda do App Server front-face (x=222).
+       Label centralizado acima do conector, entre x=190 e x=222, bem acima para não colidir. -->
+  <text x="206" y="150" font-size="8.5" fill="#111" text-anchor="middle">REST / HTTPS</text>
+  <text x="206" y="162" font-size="8" fill="#666" text-anchor="middle">«HTTP» :8080</text>
+  <!-- socket requerido: meia-lua abre à esquerda, centro em x=190, y=175 -->
+  <path d="M190,167 A8,8 0 0,0 190,183" fill="none" stroke="#333" stroke-width="1.5"/>
+  <!-- linha do socket à ball -->
+  <line x1="190" y1="175" x2="214" y2="175" stroke="#333" stroke-width="1.5"/>
+  <!-- ball fornecida encostando na borda esquerda do App Server -->
+  <circle cx="222" cy="175" r="7" fill="white" stroke="#333" stroke-width="1.5"/>
+
+  <!-- [2] App Server → DB Server: JDBC / TCP :5432
+       Face direita 3D do App Server termina em x=568.
+       Cilindro começa em x=640.
+       Connector em y=190. Label bem acima para não tocar o topo 3D. -->
+  <text x="604" y="78" font-size="8.5" fill="#111" text-anchor="middle">Hikari Pool Connection</text>
+  <text x="604" y="90" font-size="8" fill="#666" text-anchor="middle">«JDBC / TCP» :5432</text>
+  <!-- socket requerido na face direita 3D (x=568), y=190 -->
+  <path d="M568,182 A8,8 0 0,1 568,198" fill="none" stroke="#333" stroke-width="1.5"/>
+  <!-- linha do socket à ball -->
+  <line x1="568" y1="190" x2="632" y2="190" stroke="#333" stroke-width="1.5"/>
+  <!-- ball fornecida encostando na borda esquerda do cilindro -->
+  <circle cx="640" cy="190" r="7" fill="white" stroke="#333" stroke-width="1.5"/>
+
+  <!-- [3] DB Server → Tabelas: SQL / JDBC :5432
+       Borda direita do cilindro x=880. Borda esquerda das Tabelas x=1000.
+       Connector em y=210. Label acima com espaço adequado. -->
+  <text x="940" y="160" font-size="8.5" fill="#111" text-anchor="middle">Consultas SQL</text>
+  <text x="940" y="172" font-size="8" fill="#666" text-anchor="middle">«SQL / JDBC» :5432</text>
+  <!-- socket requerido na borda direita do cilindro (x=880), y=210 -->
+  <path d="M880,202 A8,8 0 0,1 880,218" fill="none" stroke="#333" stroke-width="1.5"/>
+  <!-- linha do socket à ball -->
+  <line x1="880" y1="210" x2="992" y2="210" stroke="#333" stroke-width="1.5"/>
+  <!-- ball fornecida encostando na borda esquerda do subsystem Tabelas -->
+  <circle cx="1000" cy="210" r="7" fill="white" stroke="#333" stroke-width="1.5"/>
+
+  <!-- ═══ DEPLOY ARROWS ═══
+       Saem da borda inferior do App Server (y=270) e chegam ao topo da Web/API Layer (y=360).
+       Os dois do cilindro (y=270) chegam até y=360 também.
+       Labels centrados lateralmente nas setas, sem sobreposição com a interface vertical. -->
+
+  <!-- deploy carrental.jar: x=306, de y=270 a y=360 -->
+  <line x1="306" y1="270" x2="306" y2="360" stroke="#555" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+  <text x="240" y="318" font-size="8" fill="#555" text-anchor="middle">«deploy»</text>
+
+  <!-- deploy application.yml: x=470, de y=270 a y=360 -->
+  <line x1="470" y1="270" x2="470" y2="360" stroke="#555" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+  <text x="404" y="318" font-size="8" fill="#555" text-anchor="middle">«deploy»</text>
+
+  <!-- deploy carrental DB: x=713, de y=270 a y=360 -->
+  <line x1="713" y1="270" x2="713" y2="360" stroke="#555" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+  <text x="647" y="318" font-size="8" fill="#555" text-anchor="middle">«deploy»</text>
+
+  <!-- deploy Hikari Pool: x=831, de y=270 a y=360 -->
+  <line x1="831" y1="270" x2="831" y2="360" stroke="#555" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+  <text x="765" y="318" font-size="8" fill="#555" text-anchor="middle">«deploy»</text>
+
+  <!-- ═══ INTERFACE VERTICAL: carrental.jar → Web/API Layer ═══
+       Ball na base do carrental.jar (y=250). Socket no topo da Web/API Layer (y=360).
+       Label à direita da linha (x=360) sem cruzar as setas deploy. -->
+  <circle cx="306" cy="250" r="7" fill="white" stroke="#333" stroke-width="1.5"/>
+  <line x1="306" y1="257" x2="306" y2="360" stroke="#333" stroke-width="1.5"/>
+  <path d="M298,360 A8,8 0 0,1 314,360" fill="none" stroke="#333" stroke-width="1.5"/>
+  <text x="362" y="306" font-size="8.5" fill="#111" text-anchor="middle">«HTTP / REST»</text>
+  <text x="362" y="318" font-size="8" fill="#666" text-anchor="middle">Controllers / Views</text>
+
+  <!-- ═══ INTERFACE VERTICAL: Hikari Pool → Repositories ═══
+       Ball saindo da borda direita do Hikari Pool artifact (x=872, y=228).
+       Desce pela direita do diagrama (x=1020) até a altura dos Repositories (y=680).
+       Entra horizontalmente à esquerda dos Repositories. -->
+  <circle cx="872" cy="228" r="7" fill="white" stroke="#333" stroke-width="1.5"/>
+  <line x1="879" y1="228" x2="1020" y2="228" stroke="#333" stroke-width="1.3" stroke-dasharray="4,2"/>
+  <line x1="1020" y1="228" x2="1020" y2="680" stroke="#333" stroke-width="1.3" stroke-dasharray="4,2"/>
+  <line x1="1020" y1="680" x2="700" y2="680" stroke="#333" stroke-width="1.3" stroke-dasharray="4,2"/>
+  <path d="M700,672 A8,8 0 0,0 700,688" fill="none" stroke="#333" stroke-width="1.5"/>
+  <text x="1028" y="458" font-size="8" fill="#666">TCP :5432</text>
+
+  <!-- ═══ SUBSYSTEM: Web / API Layer ═══ -->
+  <rect x="222" y="360" width="752" height="112" rx="2" fill="white" stroke="#555" stroke-width="1.2" stroke-dasharray="6,3"/>
+  <rect x="222" y="360" width="100" height="16" rx="2" fill="white" stroke="#555" stroke-width="1.2" stroke-dasharray="6,3"/>
+  <text x="227" y="372" font-size="8.5" fill="#444">«subsystem»</text>
+  <text x="598" y="388" font-size="11.5" font-weight="700" fill="#111" text-anchor="middle">Web / API Layer</text>
+
+  <rect x="232" y="394" width="218" height="68" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="232" y1="412" x2="450" y2="412" stroke="#555" stroke-width="0.8"/>
+  <text x="341" y="406" font-size="8.5" fill="#444" text-anchor="middle">«component»</text>
+  <text x="341" y="424" font-size="11" font-weight="700" fill="#111" text-anchor="middle">Controllers</text>
+  <text x="341" y="438" font-size="9" fill="#555" text-anchor="middle">Auth · Pedido · Agente</text>
+  <text x="341" y="452" font-size="9" fill="#555" text-anchor="middle">Cliente · Automovel · Page</text>
+
+  <rect x="464" y="394" width="218" height="68" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="464" y1="412" x2="682" y2="412" stroke="#555" stroke-width="0.8"/>
+  <text x="573" y="406" font-size="8.5" fill="#444" text-anchor="middle">«component»</text>
+  <text x="573" y="424" font-size="11" font-weight="700" fill="#111" text-anchor="middle">Thymeleaf Views</text>
+  <text x="573" y="438" font-size="9" fill="#555" text-anchor="middle">dashboard-cliente</text>
+  <text x="573" y="452" font-size="9" fill="#555" text-anchor="middle">dashboard-agente · login</text>
+
+  <rect x="696" y="394" width="270" height="68" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="696" y1="412" x2="966" y2="412" stroke="#555" stroke-width="0.8"/>
+  <text x="831" y="406" font-size="8.5" fill="#444" text-anchor="middle">«component»</text>
+  <text x="831" y="424" font-size="11" font-weight="700" fill="#111" text-anchor="middle">Swagger UI</text>
+  <text x="831" y="438" font-size="9" fill="#555" text-anchor="middle">/swagger-ui/**  ·  OpenAPI 3.0</text>
+  <text x="831" y="452" font-size="8.5" fill="#777" text-anchor="middle">«REST / HTTP»</text>
+
+  <!-- ═══ SUBSYSTEM: Security Layer ═══ -->
+  <rect x="222" y="494" width="752" height="120" rx="2" fill="white" stroke="#555" stroke-width="1.2" stroke-dasharray="6,3"/>
+  <rect x="222" y="494" width="100" height="16" rx="2" fill="white" stroke="#555" stroke-width="1.2" stroke-dasharray="6,3"/>
+  <text x="227" y="506" font-size="8.5" fill="#444">«subsystem»</text>
+  <text x="598" y="522" font-size="11.5" font-weight="700" fill="#111" text-anchor="middle">Security Layer</text>
+
+  <rect x="232" y="530" width="218" height="74" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="232" y1="548" x2="450" y2="548" stroke="#555" stroke-width="0.8"/>
+  <text x="341" y="542" font-size="8.5" fill="#444" text-anchor="middle">«component»</text>
+  <text x="341" y="560" font-size="11" font-weight="700" fill="#111" text-anchor="middle">JwtUtil / JwtService</text>
+  <text x="341" y="574" font-size="9" fill="#555" text-anchor="middle">HMAC-SHA512 · 86400s</text>
+  <text x="341" y="588" font-size="9" fill="#555" text-anchor="middle">secret via application.yml</text>
+
+  <rect x="464" y="530" width="218" height="74" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="464" y1="548" x2="682" y2="548" stroke="#555" stroke-width="0.8"/>
+  <text x="573" y="542" font-size="8.5" fill="#444" text-anchor="middle">«component»</text>
+  <text x="573" y="560" font-size="11" font-weight="700" fill="#111" text-anchor="middle">JwtAuthFetcher</text>
+  <text x="573" y="574" font-size="9" fill="#555" text-anchor="middle">Bearer token do header</text>
+  <text x="573" y="588" font-size="9" fill="#555" text-anchor="middle">→ SecurityContext</text>
+
+  <rect x="696" y="530" width="270" height="74" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="696" y1="548" x2="966" y2="548" stroke="#555" stroke-width="0.8"/>
+  <text x="831" y="542" font-size="8.5" fill="#444" text-anchor="middle">«component»</text>
+  <text x="831" y="560" font-size="11" font-weight="700" fill="#111" text-anchor="middle">SecurityConfig</text>
+  <text x="831" y="574" font-size="9" fill="#555" text-anchor="middle">intercept-url-map</text>
+  <text x="831" y="588" font-size="9" fill="#555" text-anchor="middle">rotas públicas definidas</text>
+
+  <!-- ═══ SUBSYSTEM: Business & Persistence Layer ═══ -->
+  <rect x="222" y="638" width="752" height="120" rx="2" fill="white" stroke="#555" stroke-width="1.2" stroke-dasharray="6,3"/>
+  <rect x="222" y="638" width="100" height="16" rx="2" fill="white" stroke="#555" stroke-width="1.2" stroke-dasharray="6,3"/>
+  <text x="227" y="650" font-size="8.5" fill="#444">«subsystem»</text>
+  <text x="598" y="668" font-size="11.5" font-weight="700" fill="#111" text-anchor="middle">Business &amp; Persistence Layer</text>
+
+  <rect x="232" y="674" width="218" height="74" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="232" y1="692" x2="450" y2="692" stroke="#555" stroke-width="0.8"/>
+  <text x="341" y="686" font-size="8.5" fill="#444" text-anchor="middle">«component»</text>
+  <text x="341" y="704" font-size="11" font-weight="700" fill="#111" text-anchor="middle">Services</text>
+  <text x="341" y="718" font-size="9" fill="#555" text-anchor="middle">Auth · Pedido · Agente</text>
+  <text x="341" y="732" font-size="9" fill="#555" text-anchor="middle">Cliente · Automovel</text>
+
+  <rect x="464" y="674" width="218" height="74" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="464" y1="692" x2="682" y2="692" stroke="#555" stroke-width="0.8"/>
+  <text x="573" y="686" font-size="8.5" fill="#444" text-anchor="middle">«component»</text>
+  <text x="573" y="704" font-size="11" font-weight="700" fill="#111" text-anchor="middle">Repositories</text>
+  <text x="573" y="718" font-size="9" fill="#555" text-anchor="middle">JPA / Hibernate</text>
+  <text x="573" y="732" font-size="9" fill="#555" text-anchor="middle">CrudRepository</text>
+
+  <rect x="696" y="674" width="270" height="74" rx="2" fill="white" stroke="#555" stroke-width="1"/>
+  <line x1="696" y1="692" x2="966" y2="692" stroke="#555" stroke-width="0.8"/>
+  <text x="831" y="686" font-size="8.5" fill="#444" text-anchor="middle">«component»</text>
+  <text x="831" y="704" font-size="11" font-weight="700" fill="#111" text-anchor="middle">Model / Entities</text>
+  <text x="831" y="718" font-size="9" fill="#555" text-anchor="middle">Usuario · Pedido · Contrato</text>
+  <text x="831" y="732" font-size="9" fill="#555" text-anchor="middle">Automovel · Rendimento</text>
+
+  <!-- ═══ LEGENDA ═══ -->
+  <rect x="18" y="796" width="1368" height="150" rx="2" fill="white" stroke="#ccc" stroke-width="1"/>
+  <text x="30" y="816" font-size="10.5" font-weight="700" fill="#111">Legenda:</text>
+
+  <line x1="120" y1="812" x2="180" y2="812" stroke="#333" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="188" y="816" font-size="9.5" fill="#333">Comunicação de rede</text>
+
+  <line x1="120" y1="836" x2="180" y2="836" stroke="#555" stroke-width="1.2" stroke-dasharray="5,3" marker-end="url(#arrd)"/>
+  <text x="188" y="840" font-size="9.5" fill="#333">Dependência interna / «deploy»</text>
+
+  <circle cx="129" cy="862" r="7" fill="white" stroke="#333" stroke-width="1.5"/>
+  <text x="142" y="866" font-size="9.5" fill="#333">Interface fornecida (ball)</text>
+
+  <path d="M370,854 A8,8 0 0,0 370,870" fill="none" stroke="#333" stroke-width="1.5"/>
+  <text x="384" y="866" font-size="9.5" fill="#333">Interface requerida (socket)</text>
+
+  <line x1="580" y1="862" x2="600" y2="862" stroke="#333" stroke-width="1.2"/>
+  <circle cx="578" cy="862" r="7" fill="white" stroke="#333" stroke-width="1.5"/>
+  <path d="M600,854 A8,8 0 0,1 600,870" fill="none" stroke="#333" stroke-width="1.5"/>
+  <text x="614" y="866" font-size="9.5" fill="#333">Conector fornecida ↔ requerida</text>
+
+  <!-- cilindro legenda -->
+  <rect x="860" y="852" width="28" height="20" fill="white" stroke="none"/>
+  <line x1="860" y1="852" x2="860" y2="872" stroke="#555" stroke-width="1.4"/>
+  <line x1="888" y1="852" x2="888" y2="872" stroke="#555" stroke-width="1.4"/>
+  <ellipse cx="874" cy="852" rx="14" ry="5" fill="white" stroke="#555" stroke-width="1.4"/>
+  <path d="M860,872 A14,5 0 0,0 888,872" fill="white" stroke="#555" stroke-width="1.4"/>
+  <text x="896" y="866" font-size="9.5" fill="#333">Nó de banco de dados (cilindro UML)</text>
+
+  <text x="1110" y="850" font-size="9" font-style="italic" fill="#333">«REST/HTTPS»  «JDBC/TCP»  «SQL»</text>
+  <text x="1110" y="864" font-size="9" fill="#666">Tipo de comunicação indicado na aresta</text>
+</svg>
