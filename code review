@@ -1,0 +1,293 @@
+🔴 Críticos
+Comentário 1 — AuthService.java linha 31
+🐛 Bug: Chave de claim JWT incorreta — tipo sempre será null
+// AuthService.java linha 31 — LEITURA com chave errada
+String tipo = claims.get("tipo", String.class); // ← "tipo" não existe no token!
+
+// JwtUtil.java linha 31 — ESCRITA com chave diferente
+claims.put("tipoUsuario", tipo); // ← a chave correta é "tipoUsuario"
+
+O token JWT é gerado com a chave "tipoUsuario" em JwtUtil.gerarToken(), mas em AuthService.buscarUsuarioPorToken() é lido com a chave "tipo". Isso faz com que tipo seja sempre null, os blocos if ("CLIENTE"... ) e if ("AGENTE"... ) nunca sejam atingidos, e o método sempre lance:
+
+IllegalArgumentException("Tipo de usuário inválido no token")
+Correção
+String tipo = claims.get("tipoUsuario", String.class); // ✅
+Comentário 2 — JwtAuthenticationFetcher.java linhas 24 e 38
+🔴 Code Smell: System.out.println em código de produção
+System.out.println(">>> FETCHER CHAMADO");
+System.out.println(">>> TOKEN VALIDO: " + login + " ROLE: " + role);
+
+Impressões de debug em produção poluem os logs, expõem informações sensíveis (login e role do usuário logado) e degradam performance.
+
+Sugestão
+
+Use o logger do SLF4J:
+
+private static final Logger log = LoggerFactory.getLogger(JwtAuthenticationFetcher.class);
+
+log.debug("Authentication fetcher called");
+log.debug("Valid token for user: {} with role: {}", login, role);
+Comentário 3 — JwtService.java
+🔴 Dead Code + API Deprecated
+
+Existe uma classe JwtUtil (no pacote security) que já implementa a geração de token com a API correta do JJWT 0.12.x.
+
+A JwtService usa métodos deprecated:
+
+Jwts.builder()
+    .setSubject(login)                              // ❌ deprecated em JJWT 0.12+
+    .signWith(SignatureAlgorithm.HS512, secretKey)  // ❌ deprecated!
+
+Além disso, aparentemente não é injetada em nenhum lugar — é código morto.
+
+Sugestão
+
+Remover JwtService completamente.
+
+Comentário 4 — ClienteService.java linha 30 e AgenteService.java linha 30
+🔴 Falha de segurança: Registro sem senha permitido
+if (cliente.getSenha() != null && !cliente.getSenha().isBlank()) {
+    cliente.setSenha(BCrypt.hashpw(...));
+}
+return repository.save(cliente); // ← salvo SEM senha se não vier no request!
+
+Se a senha não for enviada, o Cliente é salvo com senha = null, gerando erro 500 em vez de um 400 semântico.
+
+Correção
+if (cliente.getSenha() == null || cliente.getSenha().isBlank()) {
+    throw new IllegalArgumentException("A senha é obrigatória");
+}
+
+cliente.setSenha(BCrypt.hashpw(cliente.getSenha(), BCrypt.gensalt()));
+🟡 Arquitetura e Design
+Comentário 5 — PedidoService.java linha 35
+🟡 Violação de camada: Service acessando Repository de outro domínio
+private final AgenteRepository agenteRepository; // ← deveria usar AgenteService
+
+PedidoService injeta diretamente AgenteRepository para buscar um Agente. Isso viola o princípio de separação de camadas — services não devem acessar repositories de outros domínios diretamente.
+
+Sugestão
+private final AgenteService agenteService;
+
+Agente agente = agenteService.findById(agenteId)
+    .orElseThrow(() -> new IllegalArgumentException("Agente não encontrado"));
+Comentário 6 — Address.java
+🟡 Dead Code: Modelo Address criado mas nunca utilizado
+
+A entidade Address foi criada com campos estruturados (street, city, state, zipCode), mas nunca é referenciada.
+
+Em Usuario.java, o endereço é apenas uma String:
+
+@Column(length = 200)
+private String endereco;
+Sugestão
+Remover Address.java (código morto), ou
+Substituir String endereco por @Embedded Address.
+Comentário 7 — AccessLevelEnum.java
+🟡 Dead Code: Enum não utilizado em nenhuma parte do sistema
+public enum AccessLevelEnum { CLIENT, AGENT, ADMIN }
+
+O enum define um ADMIN que não existe em nenhum outro lugar do sistema, e o próprio enum não é referenciado em nenhuma classe.
+
+Sugestão
+
+Remover o enum ou implementar efetivamente os papéis de acesso.
+
+Comentário 8 — Todos os Controllers
+🟡 Falha de segurança: Ausência total de controle de acesso por papel (role)
+
+Nenhum endpoint possui @Secured ou verificação de role.
+
+Isso permite, por exemplo:
+
+Um CLIENTE chamar PUT /pedido/{id}/status
+Qualquer usuário listar todos os clientes
+Qualquer usuário criar/deletar veículos
+Correção
+@Secured(SecurityRule.IS_AUTHENTICATED)
+@Controller("/clientes")
+public class ClienteController { ... }
+
+@Secured("EMPRESA")
+@Put("/{id}/status")
+public HttpResponse<Pedido> atualizarStatus(...) { ... }
+Comentário 9 — Usuario.java linha 14
+🟡 Deserialização polimórfica incorreta
+@JsonDeserialize(as = Cliente.class)
+public abstract class Usuario { ... }
+
+Isso força qualquer referência de Usuario a ser deserializada como Cliente.
+
+Correção
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "tipo")
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = Cliente.class, name = "CLIENTE"),
+    @JsonSubTypes.Type(value = Agente.class, name = "AGENTE")
+})
+public abstract class Usuario { ... }
+Comentário 10 — Pedido.java linhas 36 e 40
+🟡 Performance: FetchType.EAGER
+@ManyToOne(fetch = FetchType.EAGER)
+private Cliente cliente;
+
+@ManyToMany(fetch = FetchType.EAGER)
+private List<Automovel> automoveis;
+
+EAGER carrega os relacionamentos imediatamente, mesmo quando não são necessários.
+
+Em ManyToMany, isso pode causar problema de N+1 queries e degradação de performance.
+
+Sugestão
+
+Usar FetchType.LAZY (padrão do JPA).
+
+🔵 Boas Práticas
+Comentário 11 — Services
+🔵 Exceções de negócio genéricas
+throw new IllegalArgumentException("Cliente não encontrado com id: " + id);
+
+IllegalArgumentException é inadequada para erros de domínio.
+
+Sugestão
+public class EntityNotFoundException extends RuntimeException { ... }
+
+Com handler global:
+
+return HttpResponse.notFound(Map.of("message", e.getMessage()));
+Comentário 12 — ClienteController.java vs AgenteController.java
+🔵 Tratamento de exceções inconsistente
+
+ClienteController:
+
+} catch (IllegalArgumentException e) {
+    return HttpResponse.notFound(); // ← perde a mensagem
+}
+
+AgenteController usa HttpStatusException.
+
+Sugestão
+
+Padronizar usando exception handler global.
+
+Comentário 13 — PedidoRequest.java
+🔵 DTO com getters/setters manuais
+public LocalDateTime getDataInicio() { return dataInicio; }
+public void setDataInicio(LocalDateTime dataInicio) { this.dataInicio = dataInicio; }
+
+As entidades usam Lombok, mas o DTO possui boilerplate manual.
+
+Sugestão
+@Serdeable
+@Getter
+@Setter
+@NoArgsConstructor
+public class PedidoRequest {
+    private LocalDateTime dataInicio;
+    private LocalDateTime dataFim;
+    private List<Long> automovelIds;
+}
+Comentário 14 — AgenteService.java linha 70
+🔵 findByLogin retorna null em vez de Optional
+Agente agente = repository.findByLogin(login);
+
+if (agente == null) {
+    throw ...
+}
+
+ClienteService já usa Optional.
+
+Sugestão
+
+Padronizar:
+
+Optional<Agente> findByLogin(String login);
+Comentário 15 — PedidoService.java linhas 102–105
+🔵 Contrato criado sem dataFim
+Contrato contrato = new Contrato();
+contrato.setDataInicio(LocalDateTime.now());
+// contrato.setDataFim(???)
+Correção
+contrato.setDataInicio(pedido.getDataInicio());
+contrato.setDataFim(pedido.getDataFim());
+Comentário 16 — Pedido.java linha 55
+🔵 valorTotal nunca é calculado
+@Column(name = "valor_total", precision = 15, scale = 2)
+private BigDecimal valorTotal;
+
+O valor total do aluguel é um dado fundamental e deveria ser calculado na criação do pedido.
+
+Sugestão
+long dias = ChronoUnit.DAYS.between(
+    pedido.getDataInicio(),
+    pedido.getDataFim()
+);
+
+pedido.setValorTotal(
+    valorDiaria.multiply(BigDecimal.valueOf(dias))
+);
+Comentário 17 — PedidoController.java linhas 60–62
+🔵 Status recebido como Map<String, String>
+StatusPedidoEnum novoStatus = StatusPedidoEnum.valueOf(body.get("status"));
+
+Pode lançar:
+
+NullPointerException
+IllegalArgumentException
+Sugestão
+
+Criar DTO validado:
+
+@Serdeable
+@Getter
+@Setter
+public class AtualizarStatusRequest {
+
+    @NotNull
+    private StatusPedidoEnum status;
+}
+Comentário 18 — Pedido.java linha 29 e PedidoService.java linha 47
+🔵 dataCriacao inicializada duas vezes
+// Pedido.java
+private LocalDateTime dataCriacao = LocalDateTime.now();
+
+// PedidoService.java
+pedido.setDataCriacao(LocalDateTime.now());
+Sugestão
+
+Manter apenas uma abordagem:
+
+inicialização no campo, ou
+@PrePersist
+Comentário 19 — AgenteController.java linha 27
+🔵 Criação de recurso retorna 200 OK
+@Post
+public Agente create(@Body @Valid Agente agente) {
+    return agenteService.create(agente);
+}
+
+Criação de recurso deve retornar 201 Created.
+
+Correção
+public HttpResponse<Agente> create(@Body @Valid Agente agente) {
+    return HttpResponse.created(agenteService.create(agente));
+}
+Comentário 20 — CarRentalTest.java
+🔵 Ausência de testes unitários
+@Test
+void testItWorks() {
+    Assertions.assertTrue(application.isRunning());
+}
+
+O projeto possui apenas um smoke test.
+
+Sugestão
+
+Adicionar:
+
+Testes unitários nos services
+criação de pedido
+autenticação
+conflito de datas
+Testes de integração nos controllers
+usando o HTTP Client do Micronaut
+Mockito para mocks de dependência
